@@ -14,6 +14,11 @@ public final class Game {
 		ROOTS
 	}
 	
+	// resolution
+	private static final int WIDTH = 400;
+	private static final int HEIGHT = 700;
+	
+	// requested frames per second
 	private static final int REQUESTED_FPS = 60;
 	
 	// time of last call to getDelta()
@@ -23,6 +28,9 @@ public final class Game {
     private static int current_frame = 0;
     private static int current_fps = 0;
     private static long last_fps_time = 0L;
+    
+    // exit flag
+    private static boolean exit_requested = false;
 	
 	// private constructor
 	private Game () {}
@@ -32,8 +40,29 @@ public final class Game {
 	 */
 	public static void init()
 	{
+		initOpenGL();
+		
 		getDelta();
 		last_fps_time = getTime();
+	}
+	
+	public static void initOpenGL()
+	{
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glClearColor(.259f, .294f, .529f, 0f);
+        
+        // enable alpha blending
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        
+        GL11.glViewport(0, 0, WIDTH, HEIGHT);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+                
+        // initialize OpenGL
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0., WIDTH, HEIGHT, 0., 1., -1.);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 	
 	/**
@@ -41,7 +70,7 @@ public final class Game {
 	 */
 	public static void start()
 	{
-		while(!Display.isCloseRequested())
+		while(!exit_requested && !Display.isCloseRequested())
 		{
 			Display.update();
 			
@@ -49,6 +78,7 @@ public final class Game {
 			{
 				int delta = getDelta();
 				update(delta);
+				render();
 			}
 			else
 			{
@@ -59,13 +89,18 @@ public final class Game {
 				catch (InterruptedException e) {}
 				if(Display.isVisible() && Display.isDirty())
 				{
-					int delta = getDelta();
-					update(delta);
+					render();
 				}
+				renderPause();
 			}
 			
 			Display.sync(REQUESTED_FPS);
 		}
+	}
+	
+	public static void exit()
+	{
+		exit_requested = true;
 	}
 	
 	/**
@@ -75,8 +110,41 @@ public final class Game {
 	public static void update(int delta)
 	{
 		updateFPS();
-		
+	}
+	
+	public static void render()
+	{	
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
+		// sky
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
+		GL11.glVertex3f(-1f, -1f, 0f);
+		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
+		GL11.glVertex3f(WIDTH+1f, -1f, 0f);
+		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
+		GL11.glVertex3f(WIDTH+1f, 600f, 0f);
+		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
+		GL11.glVertex3f(-1f, 600f, 0f);
+		GL11.glEnd();
+		
+		// dirt
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
+		GL11.glVertex3f(-1f, 600f, -1f);
+		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
+		GL11.glVertex3f(WIDTH+1f, 600f, -1f);
+		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
+		GL11.glVertex3f(WIDTH+1f, 1200f, -1f);
+		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
+		GL11.glVertex3f(-1f, 1200f, -1f);
+		GL11.glEnd();
+		
+		// grass
+	}
+	
+	public static void renderPause()
+	{
 	}
 	
 	public static int getFPS() {

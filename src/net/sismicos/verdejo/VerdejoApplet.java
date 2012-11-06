@@ -44,6 +44,7 @@ public class VerdejoApplet extends Applet {
 	private void stopLWJGL()
 	{
 		running = false;
+		Game.exit();
 		try
 		{
 			game_thread.join();
