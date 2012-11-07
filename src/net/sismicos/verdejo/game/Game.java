@@ -87,11 +87,11 @@ public final class Game {
 					Thread.sleep(100);
 				}
 				catch (InterruptedException e) {}
-				if(Display.isVisible() && Display.isDirty())
+				if(Display.isVisible())
 				{
 					render();
+					renderPause();
 				}
-				renderPause();
 			}
 			
 			Display.sync(REQUESTED_FPS);
@@ -141,10 +141,31 @@ public final class Game {
 		GL11.glEnd();
 		
 		// grass
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
+		GL11.glVertex3f(-1f, 550f, -1f);
+		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
+		GL11.glVertex3f(WIDTH+1f, 550f, -1f);
+		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
+		GL11.glVertex3f(WIDTH+1f, 650f, -1f);
+		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
+		GL11.glVertex3f(-1f, 650f, -1f);
+		GL11.glEnd();
 	}
 	
 	public static void renderPause()
 	{
+		// grass
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
+		GL11.glVertex3f(-1f, -1f, -1f);
+		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
+		GL11.glVertex3f(WIDTH+1f, -1f, -1f);
+		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
+		GL11.glVertex3f(WIDTH+1f, 1201f, -1f);
+		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
+		GL11.glVertex3f(-1f, 1201f, -1f);
+		GL11.glEnd();
 	}
 	
 	public static int getFPS() {
