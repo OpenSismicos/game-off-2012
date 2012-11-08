@@ -1,10 +1,21 @@
 package net.sismicos.verdejo.game;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
+import net.sismicos.verdejo.game.Component;
+import net.sismicos.verdejo.game.sky.BasicSky;
+import net.sismicos.verdejo.game.dirt.BasicDirt;
+import net.sismicos.verdejo.game.grass.BasicGrass;
+import net.sismicos.verdejo.game.ui.BasicUI;
 import net.sismicos.verdejo.logger.Logger;
+import net.sismicos.verdejo.util.GL;
+import net.sismicos.verdejo.util.Rectanglef;
 
 public final class Game {
 	
@@ -14,12 +25,20 @@ public final class Game {
 		ROOTS
 	}
 	
+	// CONSTANTS
+	
 	// resolution
-	private static final int WIDTH = 400;
-	private static final int HEIGHT = 700;
+	public static final int WIDTH = 400;
+	public static final int HEIGHT = 700;
 	
 	// requested frames per second
 	private static final int REQUESTED_FPS = 60;
+	
+	// upper and lower views dimensions
+	public static final Rectanglef UPPER_VIEW = new Rectanglef(0, 0, WIDTH, 700);
+	public static final Rectanglef LOWER_VIEW = new Rectanglef(0, 500, WIDTH, 700);
+	
+	// VARIABLES
 	
 	// time of last call to getDelta()
 	private static long last_frame_time = 0L;
@@ -31,7 +50,26 @@ public final class Game {
     
     // exit flag
     private static boolean exit_requested = false;
-	
+    
+    // camera position
+    private static Vector3f camera_position = new Vector3f(0f, 0f, 0f);
+    
+    // camera going down or up flag
+    private static boolean going_down = true;
+    
+    // camera information
+    private final class Camera {
+    	public static final int MAX_Y = 0;
+    	public static final int MIN_Y = -500;
+    	public static final float INCREMENT = 800f/1000f;
+    }
+    
+    // camera-dependant components
+    private static ArrayList<Component> components = null;
+    
+    // camera-independant components
+    private static ArrayList<Component> ui = null;
+    
 	// private constructor
 	private Game () {}
 	
@@ -44,6 +82,27 @@ public final class Game {
 		
 		getDelta();
 		last_fps_time = getTime();
+		
+		// initialize the component lists
+		components = new ArrayList<Component>();
+		ui = new ArrayList<Component>();
+		
+		// build the components
+		components.add(new BasicSky());
+		components.add(new BasicGrass());
+		components.add(new BasicDirt());
+		ui.add(new BasicUI());
+		
+		// initialize the components
+		Iterator<Component> it = components.iterator();
+		while(it.hasNext()) {
+			it.next().init();
+		}
+		
+		it = ui.iterator();
+		while(it.hasNext()) {
+			it.next().init();
+		}
 	}
 	
 	public static void initOpenGL()
@@ -109,48 +168,67 @@ public final class Game {
 	 */
 	public static void update(int delta)
 	{
+		// update the FPS counter
 		updateFPS();
+		
+		// update the components
+		Iterator<Component> it = components.iterator();
+		while(it.hasNext()) {
+			it.next().update(delta);
+		}
+		it = ui.iterator();
+		while(it.hasNext()) {
+			it.next().update(delta);
+		}
+		
+		// update camera
+		if(going_down) {
+			if(camera_position.y > -500) {
+				camera_position.y -= delta*Camera.INCREMENT;
+			}
+			else {
+				camera_position.y = Camera.MIN_Y + 0.5f;
+				going_down = !going_down;
+			}
+		}
+		else {
+			if(camera_position.y < 0) {
+				camera_position.y += delta*Camera.INCREMENT;
+			}
+			else {
+				camera_position.y = Camera.MAX_Y - 0.5f;
+				going_down = !going_down;
+			}
+		}
 	}
 	
 	public static void render()
 	{	
+		// clear canvas
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
-		// sky
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
-		GL11.glVertex3f(-1f, -1f, 0f);
-		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
-		GL11.glVertex3f(WIDTH+1f, -1f, 0f);
-		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
-		GL11.glVertex3f(WIDTH+1f, 600f, 0f);
-		GL11.glColor4f(18/256f, 112/256f, 160/256f, 1f);
-		GL11.glVertex3f(-1f, 600f, 0f);
-		GL11.glEnd();
+		// reset matrices
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
 		
-		// dirt
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
-		GL11.glVertex3f(-1f, 600f, -1f);
-		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
-		GL11.glVertex3f(WIDTH+1f, 600f, -1f);
-		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
-		GL11.glVertex3f(WIDTH+1f, 1200f, -1f);
-		GL11.glColor4f(64/256f, 59/256f, 59/256f, 1f);
-		GL11.glVertex3f(-1f, 1200f, -1f);
-		GL11.glEnd();
+		// camera translation
+		GL.glTranslatef((Vector3f) camera_position);
 		
-		// grass
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
-		GL11.glVertex3f(-1f, 550f, -1f);
-		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
-		GL11.glVertex3f(WIDTH+1f, 550f, -1f);
-		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
-		GL11.glVertex3f(WIDTH+1f, 650f, -1f);
-		GL11.glColor4f(87/256f, 194/256f, 95/256f, 1f);
-		GL11.glVertex3f(-1f, 650f, -1f);
-		GL11.glEnd();
+		// components
+		Iterator<Component> it = components.iterator();
+		while(it.hasNext()) {
+			it.next().render();
+		}
+		
+		// reset matrices for UI
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		
+		// render ui
+		it = ui.iterator();
+		while(it.hasNext()) {
+			it.next().render();
+		}
 	}
 	
 	public static void renderPause()
