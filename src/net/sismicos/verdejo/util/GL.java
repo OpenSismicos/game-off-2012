@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 
 import net.sismicos.verdejo.game.Component;
 import net.sismicos.verdejo.game.Game;
+import net.sismicos.verdejo.game.ui.UIComponent;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -47,8 +48,8 @@ public final class GL {
 	 * Based on the code on:
 	 * http://stackoverflow.com/questions/10809021/lwjgl-3d-picking
 	 */
-	public static Component glPickObject(Vector2f pos,
-			ArrayList<Component> comps) {
+	public static UIComponent glPickObject(Vector2f pos,
+			ArrayList<UIComponent> comps) {
 		// disable lighting and textures
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_TEXTURE);
@@ -66,7 +67,7 @@ public final class GL {
 		Vector3f color = new Vector3f(0f, 0f, 0f);
 		for(int i=0; i<comps.size(); ++i) {
 			comp = comps.get(i);
-			if(!comp.isPositionAbsolute() && comp.isVisible()) {
+			if(!comp.isPositionAbsolute()) {
 				color.x = (i % 256)/256f;
 				color.y = Math.min((int)(i/256f), 255)/256f;
 				color.z = Math.min((int)(i/256f/256f), 255)/256f;
@@ -81,7 +82,7 @@ public final class GL {
 		// position-absolute components
 		for(int i=0; i<comps.size(); ++i) {
 			comp = comps.get(i);
-			if(comp.isPositionAbsolute() && comp.isVisible()) {
+			if(comp.isPositionAbsolute()) {
 				color.x = (i % 256)/256f;
 				color.y = Math.min((int)(i/256f), 255)/256f;
 				color.z = Math.min((int)(i/256f/256f), 255)/256f;
@@ -103,16 +104,5 @@ public final class GL {
 		else {
 			return null;
 		}
-	}
-	/**
-	 * Pick object under the given screen position.
-	 * @param x X-component of the screen position.
-	 * @param y Y-component of the screen position.
-	 * @param comps List of Component to search for the picked object.
-	 * @return Component representing the picked object.
-	 */
-	public static Component glPickObject(float x, float y,
-			ArrayList<Component> comps) {
-		return glPickObject(new Vector2f(x, y), comps);
 	}
 }

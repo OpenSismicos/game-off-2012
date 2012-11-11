@@ -15,6 +15,7 @@ import net.sismicos.verdejo.game.dirt.BasicDirt;
 import net.sismicos.verdejo.game.grass.BasicGrass;
 import net.sismicos.verdejo.game.ui.TriangleUp;
 import net.sismicos.verdejo.game.ui.TriangleDown;
+import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
@@ -50,7 +51,7 @@ public final class Game {
     private static Vector3f camera_position = new Vector3f(0f, 0f, 0f);
     
     // camera going down or up flag
-    private static boolean going_down = true;
+    private static boolean going_down = false;
     
     // camera information
     private final class Camera {
@@ -63,7 +64,7 @@ public final class Game {
     private static ArrayList<Component> components = null;
     
     // camera-independant components
-    private static ArrayList<Component> ui = null;
+    private static ArrayList<UIComponent> ui = null;
     
 	// private constructor
 	private Game () {}
@@ -80,7 +81,7 @@ public final class Game {
 		
 		// initialize the component lists
 		components = new ArrayList<Component>();
-		ui = new ArrayList<Component>();
+		ui = new ArrayList<UIComponent>();
 		
 		// build the components
 		components.add(new BasicSky());
@@ -95,9 +96,9 @@ public final class Game {
 			it.next().init();
 		}
 		
-		it = ui.iterator();
-		while(it.hasNext()) {
-			it.next().init();
+		Iterator<UIComponent> ui_it = ui.iterator();
+		while(ui_it.hasNext()) {
+			ui_it.next().init();
 		}
 	}
 	
@@ -164,20 +165,30 @@ public final class Game {
 	 */
 	public static void update(int delta)
 	{
+		// iterators
+		Iterator<Component> it = null;
+		Iterator<UIComponent> ui_it = null;
+		
 		// update the FPS counter
 		updateFPS();
+		
+		// make all UI invisible
+		ui_it = ui.iterator();
+		while(ui_it.hasNext()) {
+			ui_it.next().hide();
+		}
 		
 		// update the input events
 		Event.update(delta);
 		
 		// update the components
-		Iterator<Component> it = components.iterator();
+		it = components.iterator();
 		while(it.hasNext()) {
 			it.next().update(delta);
 		}
-		it = ui.iterator();
-		while(it.hasNext()) {
-			it.next().update(delta);
+		ui_it = ui.iterator();
+		while(ui_it.hasNext()) {
+			ui_it.next().update(delta);
 		}
 		
 		// update camera
@@ -216,14 +227,14 @@ public final class Game {
 		Component comp = null;
 		while(it.hasNext()) {
 			comp = it.next();
-			if(!comp.isPositionAbsolute() && comp.isVisible()) {
+			if(!comp.isPositionAbsolute()) {
 				comp.render();
 			}
 		}
-		it = ui.iterator();
-		while(it.hasNext()) {
-			comp = it.next();
-			if(!comp.isPositionAbsolute() && comp.isVisible()) {
+		Iterator<UIComponent> ui_it = ui.iterator();
+		while(ui_it.hasNext()) {
+			comp = ui_it.next();
+			if(!comp.isPositionAbsolute()) {
 				comp.render();
 			}
 		}
@@ -236,14 +247,14 @@ public final class Game {
 		it = components.iterator();
 		while(it.hasNext()) {
 			comp = it.next();
-			if(comp.isPositionAbsolute() && comp.isVisible()) {
+			if(comp.isPositionAbsolute()) {
 				comp.render();
 			}
 		}
-		it = ui.iterator();
-		while(it.hasNext()) {
-			comp = it.next();
-			if(comp.isPositionAbsolute() && comp.isVisible()) {
+		ui_it = ui.iterator();
+		while(ui_it.hasNext()) {
+			comp = ui_it.next();
+			if(comp.isPositionAbsolute()) {
 				comp.render();
 			}
 		}
@@ -276,7 +287,7 @@ public final class Game {
 	 * Get the array of UI Component.
 	 * @return Array of UI Component.
 	 */
-	public static ArrayList<Component> getUIComps() {
+	public static ArrayList<UIComponent> getUIComps() {
 		return ui;
 	}
 	

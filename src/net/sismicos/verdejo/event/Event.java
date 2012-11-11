@@ -1,7 +1,9 @@
 package net.sismicos.verdejo.event;
 
-import net.sismicos.verdejo.game.Component;
+import java.util.ArrayList;
+
 import net.sismicos.verdejo.game.Game;
+import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.GL;
 
@@ -10,6 +12,10 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Event {	
 	public static void update(float delta) {
+		Vector2f pos = null;
+		UIComponent comp = null;
+		
+		// check Mouse events
 		while(Mouse.next()) {
 			// Mouse button 0 up event
 			if(Mouse.getEventButton() == 0 &&
@@ -19,15 +25,24 @@ public class Event {
 						", " + Mouse.getY() + ")");
 				
 				// pick object
-				Vector2f pos = new Vector2f((float) Mouse.getX(),
+				pos = new Vector2f((float) Mouse.getX(),
 						(float) Mouse.getY());
-				Component comp = GL.glPickObject(pos, Game.getUIComps());
+				comp = GL.glPickObject(pos, Game.getUIComps());
 				
 				// click the component (if there is one)
 				if(comp != null) {
 					comp.click();
 				}
 			}
+		}
+		
+		// check Mouse position
+		pos = new Vector2f((float) Mouse.getX(), (float) Mouse.getY());
+		comp = GL.glPickObject(pos, Game.getUIComps());
+		
+		// show the component (if there is one)
+		if(comp != null) {
+			comp.show();
 		}
 	}
 }
