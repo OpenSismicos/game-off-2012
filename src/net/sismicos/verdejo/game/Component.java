@@ -19,6 +19,18 @@ public abstract class Component {
 	 * Render the Component.
 	 */
 	public abstract void render();
+	
+	/**
+	 * Determines if the Component moves with the camera.
+	 * @return Whether or not the Component moves with the camera. 
+	 */
+	public abstract boolean isPositionAbsolute();
+	
+	/**
+	 * Determines if the Component is visible.
+	 * @return Whether or not the Component is visible.
+	 */
+	public abstract boolean isVisible();
 
 	/**
 	 * Get/Set the depth of the component in the scene.

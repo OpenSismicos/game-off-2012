@@ -41,4 +41,14 @@ public class BasicGrass extends Component {
 			GL11.glVertex3f(rect.getX(), rect.getY() + rect.getHeight(), getDepth());
 		GL11.glEnd();
 	}
+	
+	@Override
+	public boolean isPositionAbsolute() {
+		return false;
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return true;
+	}
 }

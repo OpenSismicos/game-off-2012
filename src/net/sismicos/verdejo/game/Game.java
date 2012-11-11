@@ -187,8 +187,7 @@ public final class Game {
 				camera_position.y -= delta*Camera.INCREMENT;
 			}
 			else {
-				camera_position.y = Camera.MIN_Y + 0.5f;
-				going_down = !going_down;
+				camera_position.y = Camera.MIN_Y;
 			}
 		}
 		else {
@@ -196,8 +195,7 @@ public final class Game {
 				camera_position.y += delta*Camera.INCREMENT;
 			}
 			else {
-				camera_position.y = Camera.MAX_Y - 0.5f;
-				going_down = !going_down;
+				camera_position.y = Camera.MAX_Y;
 			}
 		}
 	}
@@ -214,20 +212,41 @@ public final class Game {
 		// camera translation
 		GL.glTranslatef((Vector3f) camera_position);
 		
-		// components
+		// camera-relative components
 		Iterator<Component> it = components.iterator();
+		Component comp = null;
 		while(it.hasNext()) {
-			it.next().render();
+			comp = it.next();
+			if(!comp.isPositionAbsolute() && comp.isVisible()) {
+				comp.render();
+			}
+		}
+		it = ui.iterator();
+		while(it.hasNext()) {
+			comp = it.next();
+			if(!comp.isPositionAbsolute() && comp.isVisible()) {
+				comp.render();
+			}
 		}
 		
 		// reset matrices for UI
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		
-		// render ui
+		// position-absolute components
+		it = components.iterator();
+		while(it.hasNext()) {
+			comp = it.next();
+			if(comp.isPositionAbsolute() && comp.isVisible()) {
+				comp.render();
+			}
+		}
 		it = ui.iterator();
 		while(it.hasNext()) {
-			it.next().render();
+			comp = it.next();
+			if(comp.isPositionAbsolute() && comp.isVisible()) {
+				comp.render();
+			}
 		}
 	}
 	
@@ -244,6 +263,14 @@ public final class Game {
 		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
 		GL11.glVertex3f(-1f, 1201f, -1f);
 		GL11.glEnd();
+	}
+	
+	public static void moveDown() {
+		going_down = true;
+	}
+	
+	public static void moveUp() {
+		going_down = false;
 	}
 	
 	public static int getFPS() {
