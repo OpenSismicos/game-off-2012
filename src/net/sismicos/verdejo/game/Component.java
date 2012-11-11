@@ -1,8 +1,17 @@
 package net.sismicos.verdejo.game;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
+import net.sismicos.verdejo.util.GL;
+import net.sismicos.verdejo.util.Rectanglef;
+
 public abstract class Component {
 	// depth in the scene
 	private float depth = 0f;
+	
+	// collision rectangle
+	private Rectanglef collision_rect = new Rectanglef(0f, 0f, 0f, 0f);
 	
 	/**
 	 * Initialize the component.
@@ -21,6 +30,11 @@ public abstract class Component {
 	public abstract void render();
 	
 	/**
+	 * Action to perform when clicked. By default does nothing.
+	 */
+	public void click() {}
+	
+	/**
 	 * Determines if the Component moves with the camera.
 	 * @return Whether or not the Component moves with the camera. 
 	 */
@@ -31,6 +45,29 @@ public abstract class Component {
 	 * @return Whether or not the Component is visible.
 	 */
 	public abstract boolean isVisible();
+	
+	/**
+	 * Determines if the Component responds to clicks.
+	 * @return Whether or not the Component responds to click.
+	 */
+	public abstract boolean isClickable();
+	
+	/**
+	 * Render the collision rectangle with the given color.
+	 * @param color
+	 */
+	public void renderCollisionRect(Vector3f color) {
+		GL11.glBegin(GL11.GL_QUADS);
+			GL.glColor3f(color);
+			GL11.glVertex2f(collision_rect.getX(), collision_rect.getY());
+			GL11.glVertex2f(collision_rect.getX() + collision_rect.getWidth(),
+					collision_rect.getY());
+			GL11.glVertex2f(collision_rect.getX() + collision_rect.getWidth(),
+					collision_rect.getY() + collision_rect.getHeight());
+			GL11.glVertex2f(collision_rect.getX(),
+					collision_rect.getY() + collision_rect.getHeight());			
+		GL11.glEnd();
+	}
 
 	/**
 	 * Get/Set the depth of the component in the scene.
@@ -40,5 +77,15 @@ public abstract class Component {
 	}
 	public void setDepth(float depth) {
 		this.depth = depth;
+	}
+	
+	/**
+	 * Get/Set the collision rectangle of the Component.
+	 */
+	public Rectanglef getCollisionRect() {
+		return new Rectanglef(collision_rect);
+	}
+	public void setCollisionRect(Rectanglef rect) {
+		collision_rect = rect;
 	}
 }

@@ -8,23 +8,18 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
+import net.sismicos.verdejo.event.Event;
 import net.sismicos.verdejo.game.Component;
 import net.sismicos.verdejo.game.sky.BasicSky;
 import net.sismicos.verdejo.game.dirt.BasicDirt;
 import net.sismicos.verdejo.game.grass.BasicGrass;
-import net.sismicos.verdejo.game.ui.BasicUI;
+import net.sismicos.verdejo.game.ui.TriangleUp;
+import net.sismicos.verdejo.game.ui.TriangleDown;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
 public final class Game {
-	
-	public static enum View
-	{
-		CANOPY,
-		ROOTS
-	}
-	
 	// CONSTANTS
 	
 	// resolution
@@ -91,7 +86,8 @@ public final class Game {
 		components.add(new BasicSky());
 		components.add(new BasicGrass());
 		components.add(new BasicDirt());
-		ui.add(new BasicUI());
+		ui.add(new TriangleUp());
+		ui.add(new TriangleDown());
 		
 		// initialize the components
 		Iterator<Component> it = components.iterator();
@@ -170,6 +166,9 @@ public final class Game {
 	{
 		// update the FPS counter
 		updateFPS();
+		
+		// update the input events
+		Event.update(delta);
 		
 		// update the components
 		Iterator<Component> it = components.iterator();
@@ -271,6 +270,22 @@ public final class Game {
 	
 	public static void moveUp() {
 		going_down = false;
+	}
+	
+	/**
+	 * Get the array of UI Component.
+	 * @return Array of UI Component.
+	 */
+	public static ArrayList<Component> getUIComps() {
+		return ui;
+	}
+	
+	/**
+	 * Get the current camera position.
+	 * @return Current camera position.
+	 */
+	public static Vector3f getCameraPos() {
+		return new Vector3f(camera_position);
 	}
 	
 	public static int getFPS() {

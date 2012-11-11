@@ -33,11 +33,8 @@ public class BasicGrass extends Component {
 		GL11.glBegin(GL11.GL_QUADS);
 			GL.glColor4f(color);
 			GL11.glVertex3f(rect.getX(), rect.getY(), getDepth());
-			GL.glColor4f(color);
 			GL11.glVertex3f(rect.getX() + rect.getWidth(), rect.getY(), getDepth());
-			GL.glColor4f(color);
 			GL11.glVertex3f(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), getDepth());
-			GL.glColor4f(color);
 			GL11.glVertex3f(rect.getX(), rect.getY() + rect.getHeight(), getDepth());
 		GL11.glEnd();
 	}
@@ -49,6 +46,11 @@ public class BasicGrass extends Component {
 	
 	@Override
 	public boolean isVisible() {
+		return true;
+	}
+
+	@Override
+	public boolean isClickable() {
 		return true;
 	}
 }
