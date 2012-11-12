@@ -7,8 +7,6 @@ import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
 public abstract class Component {
-	// depth in the scene
-	private float depth = 0f;
 	
 	// collision rectangle
 	private Rectanglef collision_rect = new Rectanglef(0f, 0f, 0f, 0f);
@@ -67,16 +65,6 @@ public abstract class Component {
 			GL11.glVertex2f(collision_rect.getX(),
 					collision_rect.getY() + collision_rect.getHeight());			
 		GL11.glEnd();
-	}
-
-	/**
-	 * Get/Set the depth of the component in the scene.
-	 */
-	public float getDepth() {
-		return depth;
-	}
-	public void setDepth(float depth) {
-		this.depth = depth;
 	}
 	
 	/**

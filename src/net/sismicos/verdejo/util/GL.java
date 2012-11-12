@@ -51,7 +51,6 @@ public final class GL {
 	public static UIComponent glPickObject(Vector2f pos,
 			ArrayList<UIComponent> comps) {
 		// disable lighting and textures
-		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_TEXTURE);
 		
 		// render Components
@@ -60,7 +59,7 @@ public final class GL {
 		GL11.glLoadIdentity();
 		
 		// camera translation
-		GL.glTranslatef((Vector3f) Game.getCameraPos());
+		GL.glTranslatef(Game.getCameraPos());
 		
 		// camera-relative components
 		Component comp = null;
@@ -76,7 +75,6 @@ public final class GL {
 		}
 		
 		// reset matrices for UI
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		
 		// position-absolute components
@@ -94,6 +92,9 @@ public final class GL {
 		IntBuffer pixel = BufferUtils.createIntBuffer(3);
 		GL11.glReadPixels((int) Math.floor(pos.x), (int) Math.floor(pos.y),
 				1, 1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, pixel);
+		
+		// enable lighting and textures
+		GL11.glEnable(GL11.GL_TEXTURE);
 		
 		// return the selected Component
 		int index = ((byte)pixel.get(2))*256*256 + ((byte)pixel.get(1))*256 +

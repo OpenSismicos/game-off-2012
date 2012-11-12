@@ -8,19 +8,17 @@ import net.sismicos.verdejo.game.Game;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
-public class BasicDirt extends Component {
+public class Dirt extends Component {
 
 	// color
 	private final Vector4f color = new Vector4f(64/256f, 59/256f, 59/256f, 1f);
 
 	// position
 	private Rectanglef rect = new Rectanglef(Game.LOWER_VIEW);
-	private final float DEPTH = -1f; 
+	private final float DEPTH = 3f; 
 	
 	// constructor
-	public BasicDirt() {
-		setDepth(DEPTH);
-	}
+	public Dirt() {}
 	
 	@Override
 	public void init() {
@@ -35,10 +33,11 @@ public class BasicDirt extends Component {
 	public void render() {
 		GL11.glBegin(GL11.GL_QUADS);
 			GL.glColor4f(color);
-			GL11.glVertex3f(rect.getX(), rect.getY(), getDepth());
-			GL11.glVertex3f(rect.getX() + rect.getWidth(), rect.getY(), getDepth());
-			GL11.glVertex3f(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), getDepth());
-			GL11.glVertex3f(rect.getX(), rect.getY() + rect.getHeight(), getDepth());
+			GL11.glVertex3f(rect.getX(), rect.getY(), DEPTH);
+			GL11.glVertex3f(rect.getX() + rect.getWidth(), rect.getY(), DEPTH);
+			GL11.glVertex3f(rect.getX() + rect.getWidth(), 
+					rect.getY() + rect.getHeight(), DEPTH);
+			GL11.glVertex3f(rect.getX(), rect.getY() + rect.getHeight(), DEPTH);
 		GL11.glEnd();
 	}
 	

@@ -10,9 +10,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.sismicos.verdejo.event.Event;
 import net.sismicos.verdejo.game.Component;
-import net.sismicos.verdejo.game.sky.BasicSky;
-import net.sismicos.verdejo.game.dirt.BasicDirt;
-import net.sismicos.verdejo.game.grass.BasicGrass;
+import net.sismicos.verdejo.game.sky.Sky;
+import net.sismicos.verdejo.game.dirt.Dirt;
+import net.sismicos.verdejo.game.grass.Grass;
 import net.sismicos.verdejo.game.ui.TriangleUp;
 import net.sismicos.verdejo.game.ui.TriangleDown;
 import net.sismicos.verdejo.game.ui.UIComponent;
@@ -84,9 +84,9 @@ public final class Game {
 		ui = new ArrayList<UIComponent>();
 		
 		// build the components
-		components.add(new BasicSky());
-		components.add(new BasicGrass());
-		components.add(new BasicDirt());
+		components.add(new Grass());
+		components.add(new Sky());
+		components.add(new Dirt());
 		ui.add(new TriangleUp());
 		ui.add(new TriangleDown());
 		
@@ -104,20 +104,19 @@ public final class Game {
 	
 	public static void initOpenGL()
 	{
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		//GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClearColor(.259f, .294f, .529f, 0f);
         
         // enable alpha blending
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-                
+               
         // initialize OpenGL
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GL11.glOrtho(0., WIDTH, HEIGHT, 0., 1., -1.);
+        GL11.glOrtho(0., WIDTH, HEIGHT, 0., -50., 50.);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 	
@@ -130,7 +129,7 @@ public final class Game {
 		{
 			Display.update();
 			
-			if(Display.isActive())
+			if(true || Display.isActive())
 			{
 				int delta = getDelta();
 				update(delta);
@@ -220,7 +219,7 @@ public final class Game {
 		GL11.glLoadIdentity();
 		
 		// camera translation
-		GL.glTranslatef((Vector3f) camera_position);
+		GL.glTranslatef(camera_position);
 		
 		// camera-relative components
 		Iterator<Component> it = components.iterator();
@@ -240,7 +239,6 @@ public final class Game {
 		}
 		
 		// reset matrices for UI
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		
 		// position-absolute components
