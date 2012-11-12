@@ -1,12 +1,14 @@
 package net.sismicos.verdejo.game.ui;
 
 import net.sismicos.verdejo.game.Component;
-import net.sismicos.verdejo.logger.Logger;
 
 public abstract class UIComponent extends Component {
-
+	
 	// visibility flag
 	private boolean visible = false;
+	
+	// flag to check if the mouse is over
+	private boolean mouse_over = false;
 	
 	// transparency of the component
 	private float alpha = 1f;
@@ -16,28 +18,43 @@ public abstract class UIComponent extends Component {
 	
 	@Override
 	public void update(int delta) {
-		if(isVisible() && alpha < 1f) {
+		if(mouse_over && alpha < 1f) {
 			alpha = Math.min(alpha + alpha_inc*delta/1000f, 1f);
 		}
-		else if(!isVisible() && alpha > 0f) {
+		else if(!mouse_over && alpha > 0f) {
 			alpha = Math.max(alpha - alpha_inc*delta/1000f, 0f);
 		}
 	}
 	
 	/**
-	 * Make the UI Component visible.
+	 * Called when the mouse is over the Component.
 	 */
-	public void show() {
-		visible = true;
+	public void onMouseOver() {
+		mouse_over = true;
+	}
+	/**
+	 * Called when the mouse is off the Component.
+	 */
+	public void onMouseOff() {
+		mouse_over = false;
 	}
 	
 	/**
-	 * Make the UI Component invisible.
+	 * Hide the Component.
 	 */
 	public void hide() {
 		visible = false;
 	}
-	
+	/**
+	 * Show the Component.
+	 */
+	public void show() {
+		visible = true;
+	}
+	/**
+	 * Check if the Component is visible.
+	 * @return Whether the Component is visible or not.
+	 */
 	@Override
 	public boolean isVisible() {
 		return visible;

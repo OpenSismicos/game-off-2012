@@ -10,12 +10,14 @@ import net.sismicos.verdejo.util.Rectanglef;
 
 public class TriangleDown extends UIComponent {
 	private Vector4f color = new Vector4f(242/255f, 132/255f, 13/255f, 1f);
+	
 	private final float DEPTH = 1f;
 	private final float SIDE = 20f;
+	private final float VPAD = 10f;
 	
 	@Override
 	public void init() {
-		setCollisionRect(new Rectanglef(0f, Game.HEIGHT - 5f - SIDE, 
+		setCollisionRect(new Rectanglef(0f, Game.HEIGHT - VPAD - SIDE, 
 				Game.WIDTH, SIDE));
 		setAlphaInc(1f/.5f);
 		setAlpha(0f);
@@ -24,6 +26,13 @@ public class TriangleDown extends UIComponent {
 	@Override
 	public void update(int delta) {
 		super.update(delta);
+		
+		if(Game.isDown()) {
+			hide();
+		}
+		else {
+			show();
+		}
 	}
 
 	@Override
@@ -31,11 +40,11 @@ public class TriangleDown extends UIComponent {
 		GL11.glBegin(GL11.GL_TRIANGLES);
 			color.w = getAlpha();
 			GL.glColor4f(color);
-			GL11.glVertex3f(Game.WIDTH/2f, Game.HEIGHT - 5f, DEPTH);
-			GL11.glVertex3f(Game.WIDTH/2f + SIDE/2f, Game.HEIGHT - (5f + SIDE),
-					DEPTH);
-			GL11.glVertex3f(Game.WIDTH/2f - SIDE/2f, Game.HEIGHT - (5f + SIDE),
-					DEPTH);
+			GL11.glVertex3f(Game.WIDTH/2f, Game.HEIGHT - VPAD, DEPTH);
+			GL11.glVertex3f(Game.WIDTH/2f + SIDE/2f, 
+					Game.HEIGHT - (VPAD + SIDE), DEPTH);
+			GL11.glVertex3f(Game.WIDTH/2f - SIDE/2f,
+					Game.HEIGHT - (VPAD + SIDE), DEPTH);
 		GL11.glEnd();	
 	}
 

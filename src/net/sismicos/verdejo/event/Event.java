@@ -1,7 +1,5 @@
 package net.sismicos.verdejo.event;
 
-import java.util.ArrayList;
-
 import net.sismicos.verdejo.game.Game;
 import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
@@ -30,7 +28,7 @@ public class Event {
 				comp = GL.glPickObject(pos, Game.getUIComps());
 				
 				// click the component (if there is one)
-				if(comp != null) {
+				if(comp != null && comp.isClickable() && comp.isVisible()) {
 					comp.click();
 				}
 			}
@@ -42,7 +40,7 @@ public class Event {
 		
 		// show the component (if there is one)
 		if(comp != null) {
-			comp.show();
+			comp.onMouseOver();
 		}
 	}
 }

@@ -175,7 +175,7 @@ public final class Game {
 		// make all UI invisible
 		ui_it = ui.iterator();
 		while(ui_it.hasNext()) {
-			ui_it.next().hide();
+			ui_it.next().onMouseOff();
 		}
 		
 		// update the input events
@@ -227,14 +227,14 @@ public final class Game {
 		Component comp = null;
 		while(it.hasNext()) {
 			comp = it.next();
-			if(!comp.isPositionAbsolute()) {
+			if(!comp.isPositionAbsolute() && comp.isVisible()) {
 				comp.render();
 			}
 		}
 		Iterator<UIComponent> ui_it = ui.iterator();
 		while(ui_it.hasNext()) {
 			comp = ui_it.next();
-			if(!comp.isPositionAbsolute()) {
+			if(!comp.isPositionAbsolute() && comp.isVisible()) {
 				comp.render();
 			}
 		}
@@ -247,14 +247,14 @@ public final class Game {
 		it = components.iterator();
 		while(it.hasNext()) {
 			comp = it.next();
-			if(comp.isPositionAbsolute()) {
+			if(comp.isPositionAbsolute() && comp.isVisible()) {
 				comp.render();
 			}
 		}
 		ui_it = ui.iterator();
 		while(ui_it.hasNext()) {
 			comp = ui_it.next();
-			if(comp.isPositionAbsolute()) {
+			if(comp.isPositionAbsolute() && comp.isVisible()) {
 				comp.render();
 			}
 		}
@@ -275,12 +275,34 @@ public final class Game {
 		GL11.glEnd();
 	}
 	
+	/**
+	 * Move the camera down (to see the root)
+	 */
 	public static void moveDown() {
 		going_down = true;
 	}
 	
+	/**
+	 * Query if the camera is looking down.
+	 * @return Whether the camera is looking down or not.
+	 */
+	public static boolean isDown() {
+		return going_down;
+	}
+	
+	/**
+	 * Move the camera up (to see the canopy)
+	 */
 	public static void moveUp() {
 		going_down = false;
+	}
+	
+	/**
+	 * Query if the camera is looking up.
+	 * @return Whether the camera is looking up or not.
+	 */
+	public static boolean isUp() {
+		return !isDown();
 	}
 	
 	/**

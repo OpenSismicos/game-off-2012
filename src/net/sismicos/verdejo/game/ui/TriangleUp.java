@@ -10,12 +10,14 @@ import net.sismicos.verdejo.util.Rectanglef;
 
 public class TriangleUp extends UIComponent {
 	private Vector4f color = new Vector4f(242/255f, 132/255f, 13/255f, 1f);
+	
 	private final float DEPTH = 1f;
 	private final float SIDE = 20f;
+	private final float VPAD = 10f;
 	
 	@Override
 	public void init() {
-		setCollisionRect(new Rectanglef(0f, 5f, Game.WIDTH,	SIDE));
+		setCollisionRect(new Rectanglef(0f, VPAD, Game.WIDTH,	SIDE));
 		setAlphaInc(1f/.5f);
 		setAlpha(0f);
 	}
@@ -23,6 +25,13 @@ public class TriangleUp extends UIComponent {
 	@Override
 	public void update(int delta) {
 		super.update(delta);
+		
+		if(Game.isUp()) {
+			hide();
+		}
+		else {
+			show();
+		}
 	}
 
 	@Override
@@ -30,9 +39,9 @@ public class TriangleUp extends UIComponent {
 		GL11.glBegin(GL11.GL_TRIANGLES);
 			color.w = getAlpha();
 			GL.glColor4f(color);
-			GL11.glVertex3f(Game.WIDTH/2f, 5f, DEPTH);
-			GL11.glVertex3f(Game.WIDTH/2f + SIDE/2f, 5f + SIDE, DEPTH);
-			GL11.glVertex3f(Game.WIDTH/2f - SIDE/2f, 5f + SIDE, DEPTH);
+			GL11.glVertex3f(Game.WIDTH/2f, VPAD, DEPTH);
+			GL11.glVertex3f(Game.WIDTH/2f + SIDE/2f, VPAD + SIDE, DEPTH);
+			GL11.glVertex3f(Game.WIDTH/2f - SIDE/2f, VPAD + SIDE, DEPTH);
 		GL11.glEnd();	
 	}
 
