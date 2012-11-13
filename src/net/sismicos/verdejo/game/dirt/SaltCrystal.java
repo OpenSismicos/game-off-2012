@@ -9,16 +9,16 @@ import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
-public class WaterDrop extends UIComponent {
-	// geometry of the drop valid positions
-	private static final float STARTING_HEIGHT = 600f;
-	private static final float STARTING_HEIGHT_VAR = 0f;
-	private static final float BOTTOM_POSITION = 1250f;
+public class SaltCrystal extends UIComponent {
+	// geometry of the crystal valid initial positions
+	private static final float STARTING_HEIGHT = 900f;
+	private static final float STARTING_HEIGHT_VAR = 450f;
+	private static final float APPEARANCE_WIDTH = 300f;
 	
-	// flag to check if the drop is to be disposed
+	// flag to check if the crystal is to be disposed
 	private boolean to_be_disposed = false;
 	
-	// flag to check if the drop is clickable
+	// flag to check if the crystal  is clickable
 	private boolean clickable = true;
 	
 	// head position
@@ -28,23 +28,30 @@ public class WaterDrop extends UIComponent {
 	// velocity in pixels per second
 	private Vector2f velocity = new Vector2f(0f, 20f);
 	
-	// water drop geometry and color
-	private static final float radius = 4f;
+	// salt crystal geometry and color
+	private float radius = 4f;
 	private float depth = 4f;
-	private static final int segments = 10;
-	private static final Vector4f color = new Vector4f(27/255f, 132/255f,
-			186/255f, 1f);
+	private static final int segments = 4;
+	private static final Vector4f color = new Vector4f(1f, 1f, 1f, 0.9f);
+	private static final float INIT_RADIUS = 5f;
+	private static final float MAX_RADIUS = 10f;
+	private static final float RADIUS_INC = 3f;
 	
-	// flag to check if the water has been clicked
+	// crystal live time
+	private float live = 0f;
+	private static final float MAX_LIVE = 30f;
+	
+	// flag to check if the salt crystal has been clicked
 	private boolean clicked = false;
 	
-	private static final Vector2f final_position = new Vector2f(15f, 15f);
+	private static final Vector2f final_position = new Vector2f(75f, 15f);
 
 	@Override
 	public void init() {
 		// randomize initial position
-		position.set((float) Math.random()*Game.WIDTH, 
-				STARTING_HEIGHT - (float)Math.random()*STARTING_HEIGHT_VAR);
+		position.set((float) (Math.random()-0.5f)*APPEARANCE_WIDTH
+				+ Game.WIDTH/2f, STARTING_HEIGHT - 
+				(float)(Math.random()-.5f)*STARTING_HEIGHT_VAR);
 		show();
 	}
 	
@@ -57,13 +64,13 @@ public class WaterDrop extends UIComponent {
 				position.y-radius-2f, 2f*radius+4f, 2f*radius+4f));
 		
 		if(!clicked) {
-			if(position.y > BOTTOM_POSITION) {
+			live += delta/1000f;
+			if(live > MAX_LIVE) {
 				to_be_disposed = true;
 			}
-			else {
-				Vector2f inst_velocity = new Vector2f(velocity);
-				inst_velocity.scale((float) delta/1000f);
-				Vector2f.add(position, inst_velocity, position);
+			
+			if(radius < MAX_RADIUS) {
+				radius = Math.min(radius + RADIUS_INC*delta/1000f, MAX_RADIUS);
 			}
 		}
 		else {
@@ -71,12 +78,16 @@ public class WaterDrop extends UIComponent {
 			Vector2f.sub(final_position, position, distance);
 			if(Vector2f.dot(distance, distance) < 16f) {
 				to_be_disposed = true;
-				Game.increaseWater();
+				Game.increaseSalt();
 			}
 			else {
 				Vector2f inst_velocity = new Vector2f(velocity);
 				inst_velocity.scale((float) delta/1000f);
 				Vector2f.add(position, inst_velocity, position);
+				if(radius > INIT_RADIUS) {
+					radius = Math.max(radius - RADIUS_INC*delta/1000f*10f,
+							INIT_RADIUS);
+				}
 			}
 		}
 	}
@@ -127,5 +138,4 @@ public class WaterDrop extends UIComponent {
 		// has been clicked
 		clicked = true;
 	}
-
 }

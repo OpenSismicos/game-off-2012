@@ -1,13 +1,9 @@
 package net.sismicos.verdejo.game.dirt;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.lwjgl.util.vector.Vector4f;
 
 import net.sismicos.verdejo.game.Component;
 import net.sismicos.verdejo.game.Game;
-import net.sismicos.verdejo.game.sky.RainDrop;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
@@ -23,6 +19,9 @@ public class Dirt extends Component {
 	// sky to dirt absorption rate
 	private static final float absorption_rate = .0025f;
 	
+	// dirt crystal apparition rate
+	private static final float crystal_rate = .0025f;
+	
 	// constructor
 	public Dirt() {}
 	
@@ -35,10 +34,17 @@ public class Dirt extends Component {
 	@Override
 	public void update(int delta) {
 		// add new water drops
-		float prob_drop = Game.getRainRate()*absorption_rate*delta/1000f;
-		while(Math.random() <= prob_drop) {
-			--prob_drop;
+		float prob = Game.getRainRate()*absorption_rate*delta/1000f;
+		while(Math.random() <= prob) {
+			--prob;
 			generateWaterDrop();
+		}
+		
+		// add new salt crystals
+		prob = Game.getRainRate()*crystal_rate*delta/1000f;
+		while(Math.random() <= prob) {
+			--prob;
+			generateSaltCrystal();
 		}
 	}
 
@@ -63,7 +69,17 @@ public class Dirt extends Component {
 		return true;
 	}
 	
+	/**
+	 * Generates a new water drop.
+	 */
 	public void generateWaterDrop() {
 		Game.addUIComponent(new WaterDrop());		
+	}
+	
+	/**
+	 * Generates a new salt crystal.
+	 */
+	public void generateSaltCrystal() {
+		Game.addUIComponent(new SaltCrystal());		
 	}
 }
