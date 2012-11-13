@@ -16,6 +16,7 @@ import net.sismicos.verdejo.game.grass.Grass;
 import net.sismicos.verdejo.game.ui.TriangleUp;
 import net.sismicos.verdejo.game.ui.TriangleDown;
 import net.sismicos.verdejo.game.ui.UIComponent;
+import net.sismicos.verdejo.game.ui.UpperBar;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
@@ -89,6 +90,7 @@ public final class Game {
 		components.add(new Dirt());
 		ui.add(new TriangleUp());
 		ui.add(new TriangleDown());
+		components.add(new UpperBar());
 		
 		// initialize the components
 		Iterator<Component> it = components.iterator();

@@ -1,6 +1,5 @@
 package net.sismicos.verdejo.game.dirt;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector4f;
 
 import net.sismicos.verdejo.game.Component;
@@ -15,7 +14,7 @@ public class Dirt extends Component {
 
 	// position
 	private Rectanglef rect = new Rectanglef(Game.LOWER_VIEW);
-	private final float DEPTH = 3f; 
+	private final float depth = 3f; 
 	
 	// constructor
 	public Dirt() {}
@@ -31,14 +30,7 @@ public class Dirt extends Component {
 
 	@Override
 	public void render() {
-		GL11.glBegin(GL11.GL_QUADS);
-			GL.glColor4f(color);
-			GL11.glVertex3f(rect.getX(), rect.getY(), DEPTH);
-			GL11.glVertex3f(rect.getX() + rect.getWidth(), rect.getY(), DEPTH);
-			GL11.glVertex3f(rect.getX() + rect.getWidth(), 
-					rect.getY() + rect.getHeight(), DEPTH);
-			GL11.glVertex3f(rect.getX(), rect.getY() + rect.getHeight(), DEPTH);
-		GL11.glEnd();
+		GL.glDrawRectangle(rect, depth, color);
 	}
 	
 	@Override

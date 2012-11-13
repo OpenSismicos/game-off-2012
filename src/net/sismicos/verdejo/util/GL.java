@@ -40,6 +40,95 @@ public final class GL {
 	}
 	
 	/**
+	 * Draws a rectangle filled with the given color and with the given depth.
+	 * @param rect Rectangle coordinates.
+	 * @param depth Depth to place the rectangle in.
+	 * @param color Color to fill the rectangle with.
+	 */
+	public static void glDrawRectangle(Rectanglef rect, float depth,
+			Vector4f color) {
+		// draw the rectangle
+		GL11.glBegin(GL11.GL_QUADS);
+			GL.glColor4f(color);
+			GL11.glVertex3f(rect.getX(), rect.getY(), depth);
+			GL11.glVertex3f(rect.getX() + rect.getWidth(), rect.getY(), depth);
+			GL11.glVertex3f(rect.getX() + rect.getWidth(),
+					rect.getY() + rect.getHeight(), depth);
+			GL11.glVertex3f(rect.getX(), rect.getY() + rect.getHeight(), depth);
+		GL11.glEnd();
+	}
+	
+	/**
+	 * Draws a rectangle filled with the given color in the given position.
+	 * @param rect Rectangle coordinates.
+	 * @param position Position to place the rectangle.
+	 * @param color Color to fill the rectangle with.
+	 */
+	public static void glDrawRectangle(Rectanglef rect, Vector3f position,
+			Vector4f color) {
+		// save the MODELVIEW matrix for later
+		GL11.glPushMatrix();
+		
+		// translate to its position
+		GL11.glLoadIdentity();
+		GL.glTranslatef(position);
+		
+		// draw the rectangle
+		GL11.glBegin(GL11.GL_QUADS);
+			GL.glColor4f(color);
+			GL11.glVertex2f(rect.getX(), rect.getY());
+			GL11.glVertex2f(rect.getX() + rect.getWidth(), rect.getY());
+			GL11.glVertex2f(rect.getX() + rect.getWidth(),
+					rect.getY() + rect.getHeight());
+			GL11.glVertex2f(rect.getX(), rect.getY() + rect.getHeight());
+		GL11.glEnd();
+		
+		// restore the MODELVIEW matrix
+		GL11.glPopMatrix();
+	}
+	
+	/**
+	 * Draws a circle with given radius filled with the given color in the given
+	 * position. The circle is made from the given number of triangles. 
+	 * @param position Where to place the circle.
+	 * @param radius Radius of the circle in pixels.
+	 * @param segments Number of triangles to make the circle.
+	 * @param color Color to fill the triangle with.
+	 */
+	public static void glDrawCircle(Vector3f position, float radius, 
+			int segments, Vector4f color) {
+		
+		// get the external border
+		Vector2f[] border_points = new Vector2f[segments];
+		float angle = 0;
+		for(int i=0; i<segments; ++i) {
+			angle = (float) ((float)i/(float) segments*2f*Math.PI);
+			border_points[i] = new Vector2f((float) (-radius*Math.cos(angle)),
+					(float) (radius*Math.sin(angle)));
+		}
+		
+		// save the MODELVIEW matrix for later
+		GL11.glPushMatrix();
+		
+		// translate to its position
+		GL11.glLoadIdentity();
+		GL.glTranslatef(position);
+		
+		// draw the circle
+		GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+			GL.glColor4f(color);
+			GL11.glVertex2f(0f, 0f);
+			for(int i=0; i<segments; ++i) {
+				GL11.glVertex2f(border_points[i].x, border_points[i].y);
+			}
+			GL11.glVertex2f(border_points[0].x, border_points[0].y);
+		GL11.glEnd();
+		
+		// restore the MODELVIEW matrix
+		GL11.glPopMatrix();
+	}
+	
+	/**
 	 * Pick object under the given screen position.
 	 * @param pos Vector with the screen position.
 	 * @param comps List of Component to search for the picked object.
