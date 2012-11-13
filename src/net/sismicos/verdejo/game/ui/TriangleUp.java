@@ -59,4 +59,9 @@ public class TriangleUp extends UIComponent {
 	public void click() {
 		Game.moveUp();
 	}
+	
+	@Override
+	public boolean isDisposable() {
+		return false;
+	}
 }

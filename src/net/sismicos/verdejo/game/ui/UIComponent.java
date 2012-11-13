@@ -61,6 +61,12 @@ public abstract class UIComponent extends Component {
 	}
 	
 	/**
+	 * Check if the component is ready for disposal.
+	 * @return Whether the component is ready for disposal or not.
+	 */
+	public abstract boolean isDisposable();
+	
+	/**
 	 * Get/Set the current transparency value.
 	 */
 	public float getAlpha() {

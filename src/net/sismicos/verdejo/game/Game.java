@@ -37,6 +37,15 @@ public final class Game {
 	
 	// VARIABLES
 	
+	// amount of water and salt
+	private static int water = 0; 
+	private static int salt = 0;
+	private static final int MAX_WATER = 10;
+	private static final int MAX_SALT = 10;
+	
+	// rate of rain drop generation in rain drops per second
+	private static float num_drops = 150f;
+	
 	// time of last call to getDelta()
 	private static long last_frame_time = 0L;
 	
@@ -77,6 +86,7 @@ public final class Game {
 	{
 		initOpenGL();
 		
+		// initialize FPS
 		getDelta();
 		last_fps_time = getTime();
 		
@@ -114,7 +124,11 @@ public final class Game {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
-               
+        
+        // enable textures
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        
         // initialize OpenGL
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
@@ -172,11 +186,15 @@ public final class Game {
 		
 		// update the FPS counter
 		updateFPS();
-		
-		// make all UI invisible
-		ui_it = ui.iterator();
-		while(ui_it.hasNext()) {
-			ui_it.next().onMouseOff();
+				
+		// make all UI invisible and dispose the ones inactive
+		for(int i=ui.size()-1; i>=0; --i) {
+			if(ui.get(i).isDisposable()) {
+				ui.remove(i);
+			}
+			else {
+				ui.get(i).onMouseOff();
+			}
 		}
 		
 		// update the input events
@@ -314,6 +332,15 @@ public final class Game {
 	}
 	
 	/**
+	 * Initializes and adds to the UIComponent collection the given object.
+	 * @param comp UIComponent to be initialized and added.
+	 */
+	public static void addUIComponent(UIComponent comp) {
+		comp.init();
+		ui.add(comp);
+	}
+	
+	/**
 	 * Get the current camera position.
 	 * @return Current camera position.
 	 */
@@ -323,6 +350,65 @@ public final class Game {
 	
 	public static int getFPS() {
         return current_fps;
+	}
+	
+	/**
+	 * Gets the current amount of water. 
+	 * @return Current amount of water.
+	 */
+	public static int getWater() {
+		return water;
+	}
+	/**
+	 * Gets the current amount of salt. 
+	 * @return Current amount of salt.
+	 */
+	public static int getSalt() {
+		return salt;
+	}
+	/**
+	 * Increases by one the amount of water.
+	 */
+	public static void increaseWater() {
+		if(water < MAX_WATER) {
+			water++;
+		}
+	}
+	/**
+	 * Increases by one the amount of salt.
+	 */
+	public static void increaseSalt() {
+		if(salt < MAX_SALT) {
+			salt++;
+		}
+	}
+	/**
+	 * Decreases the amount of water by the given amount.
+	 * @param amount
+	 * @return True if there is enough water, false otherwise.
+	 */
+	public static boolean decreaseWater(int amount) {
+		if(water < amount) {
+			return false;
+		}
+		water -= amount;
+		return true;
+	}
+	/**
+	 * Decreases the amount of salt by the given amount.
+	 * @param amount
+	 * @return True if there is enough salt, false otherwise.
+	 */
+	public static boolean decreaseSalt(int amount) {
+		if(salt < amount) {
+			return false;
+		}
+		salt -= amount;
+		return true;
+	}
+	
+	public static float getRainRate() {
+		return num_drops;
 	}
 	
 	/**

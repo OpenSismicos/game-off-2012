@@ -111,7 +111,6 @@ public final class GL {
 		GL11.glPushMatrix();
 		
 		// translate to its position
-		GL11.glLoadIdentity();
 		GL.glTranslatef(position);
 		
 		// draw the circle
@@ -184,6 +183,7 @@ public final class GL {
 		
 		// enable lighting and textures
 		GL11.glEnable(GL11.GL_TEXTURE);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		// return the selected Component
 		int index = ((byte)pixel.get(2))*256*256 + ((byte)pixel.get(1))*256 +

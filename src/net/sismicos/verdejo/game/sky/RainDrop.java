@@ -41,6 +41,7 @@ public class RainDrop extends Component {
 
 	@Override
 	public void update(int delta) {
+		// move down
 		if(position.y > BOTTOM_POSITION) {
 			to_be_disposed = true;
 		}

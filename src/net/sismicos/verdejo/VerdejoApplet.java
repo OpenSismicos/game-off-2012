@@ -25,6 +25,7 @@ public class VerdejoApplet extends Applet {
 				{
 					Display.setParent(display_parent);
 					Display.create();
+					Display.setVSyncEnabled(true);
 					initLWJGL();
 				} catch (LWJGLException e)
 				{

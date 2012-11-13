@@ -62,4 +62,9 @@ public class TriangleDown extends UIComponent {
 	public void click() {
 		Game.moveDown();
 	}
+	
+	@Override
+	public boolean isDisposable() {
+		return false;
+	}
 }

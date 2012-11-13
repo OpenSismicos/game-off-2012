@@ -15,9 +15,6 @@ public class Sky extends Component {
 	
 	// rain drop collection
 	private ArrayList<RainDrop> rain_drops = null;
-	
-	// rate of rain drop generation in rain drops per second
-	private int num_drops = 150;
 		
 	// color
 	private final Vector4f color = new Vector4f(27/255f, 132/255f, 186/255f,
@@ -40,8 +37,8 @@ public class Sky extends Component {
 	@Override
 	public void update(int delta) {
 		// add new rain drops
-		float prob_drop = num_drops*delta/1000f;
-		while(Math.random() <= prob_drop) {			
+		float prob_drop = Game.getRainRate()*delta/1000f;
+		while(Math.random() <= prob_drop) {
 			--prob_drop;
 			generateRainDrop();			
 		}
