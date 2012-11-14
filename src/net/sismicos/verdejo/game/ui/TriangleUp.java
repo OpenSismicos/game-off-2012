@@ -11,7 +11,7 @@ import net.sismicos.verdejo.util.Rectanglef;
 public class TriangleUp extends UIComponent {
 	private Vector4f color = new Vector4f(242/255f, 132/255f, 13/255f, 1f);
 	
-	private final float DEPTH = 10f;
+	private final float DEPTH = 9f;
 	private final float SIDE = 20f;
 	private final float VPAD = 10f;
 	

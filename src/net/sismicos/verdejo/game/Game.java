@@ -7,6 +7,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import net.sismicos.verdejo.event.Event;
 import net.sismicos.verdejo.game.Component;
@@ -76,6 +77,12 @@ public final class Game {
     	public static final int MIN_Y = -500;
     	public static final float INCREMENT = 800f/1000f;
     }
+    
+    // pause variables
+    private static boolean is_active = true;
+    private static Rectanglef pause_rect = new Rectanglef(0f, 0f, WIDTH,
+			1200f);
+    private static Vector4f pause_color = new Vector4f(0f, 0f, 0f, .4f);
     
     // camera-dependant components
     private static ArrayList<Component> components = null;
@@ -159,16 +166,23 @@ public final class Game {
 		{
 			Display.update();
 			
-			if(true || Display.isActive())
+			if(Display.isActive())
 			{
-				int delta = getDelta();
-				update(delta);
-				if(!Event.isCollisionView()) {
-					render();
+				if(!is_active) {
+					is_active = true;
+					getDelta();
+				}
+				else {
+					int delta = getDelta();
+					update(delta);
+					if(!Event.isCollisionView()) {
+						render();
+					}
 				}
 			}
 			else
 			{
+				is_active = false;
 				try
 				{
 					Thread.sleep(100);
@@ -183,6 +197,7 @@ public final class Game {
 			
 			Display.sync(REQUESTED_FPS);
 		}
+		Display.destroy();
 	}
 	
 	public static void exit()
@@ -299,17 +314,34 @@ public final class Game {
 	
 	public static void renderPause()
 	{
-		// grass
+		// background
+		GL.glDrawRectangle(pause_rect, 10f, pause_color);
+		
+		// sad face to make the player guilty (:-D)
+		Vector3f pos = new Vector3f(140f, 250f, 11f);
+		Rectanglef eye = new Rectanglef(0f, 0f, 20f, 20f);
+		Vector4f face_color = new Vector4f(1f, 1f, 1f, .25f);
+		GL.glDrawRectangle(eye, pos, face_color);
+		pos.x += 100f;
+		GL.glDrawRectangle(eye, pos, face_color);
+		
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
-		GL11.glVertex3f(-1f, -1f, -1f);
-		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
-		GL11.glVertex3f(WIDTH+1f, -1f, -1f);
-		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
-		GL11.glVertex3f(WIDTH+1f, 1201f, -1f);
-		GL11.glColor4f(0/256f, 0/256f, 0/256f, .4f);
-		GL11.glVertex3f(-1f, 1201f, -1f);
+			GL.glColor4f(face_color);
+			GL11.glVertex3f(155f, 400f, 11f);
+			GL11.glVertex3f(200f, 300f, 11f);
+			GL11.glVertex3f(200f, 340f, 11f);
+			GL11.glVertex3f(175f, 400f, 11f);
+			
+			GL11.glVertex3f(245f, 400f, 11f);
+			GL11.glVertex3f(200f, 300f, 11f);
+			GL11.glVertex3f(200f, 340f, 11f);
+			GL11.glVertex3f(225f, 400f, 11f);
 		GL11.glEnd();
+		
+		// sad face border
+		Vector4f border_color = new Vector4f(0f, 0f, 0f, .5f);
+		Rectanglef border = new Rectanglef(80f, 200f, 240f, 240f);
+		GL.glDrawRectangle(border, 11f, border_color);
 	}
 	
 	/**
