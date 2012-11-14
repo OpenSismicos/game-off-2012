@@ -3,3 +3,5 @@
 .project
 *java.policy.applet
 *net.sismicos.verdejo.VerdejoApplet*.html
+.settings*
+web*

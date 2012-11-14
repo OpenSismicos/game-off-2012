@@ -11,8 +11,8 @@ import net.sismicos.verdejo.util.Rectanglef;
 
 public class SaltCrystal extends UIComponent {
 	// geometry of the crystal valid initial positions
-	private static final float STARTING_HEIGHT = 900f;
-	private static final float STARTING_HEIGHT_VAR = 450f;
+	private static final float STARTING_HEIGHT = 950f;
+	private static final float STARTING_HEIGHT_VAR = 600f;
 	private static final float APPEARANCE_WIDTH = 300f;
 	
 	// flag to check if the crystal is to be disposed

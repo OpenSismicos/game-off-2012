@@ -47,6 +47,9 @@ public final class Game {
 	// rate of rain drop generation in rain drops per second
 	private static float num_drops = 0f;
 	
+	// maximum value for rain
+	public static final float RAIN_MAX = 250f;
+	
 	// system for weather variability
 	private static WeatherMachine weather = new WeatherMachine();
 	
@@ -160,7 +163,9 @@ public final class Game {
 			{
 				int delta = getDelta();
 				update(delta);
-				render();
+				if(!Event.isCollisionView()) {
+					render();
+				}
 			}
 			else
 			{
@@ -434,7 +439,7 @@ public final class Game {
 	 * @param rain_rate Desired rain rate.
 	 */
 	public static void setRainRate(float rain_rate) {
-		num_drops = rain_rate;
+		num_drops = Math.min(Math.max(rain_rate, 0), RAIN_MAX);
 	}
 	
 	/**

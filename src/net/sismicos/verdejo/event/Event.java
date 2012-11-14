@@ -5,10 +5,13 @@ import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.GL;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
-public class Event {	
+public class Event {
+	private static boolean collision_view = false;
+	
 	public static void update(float delta) {
 		Vector2f pos = null;
 		UIComponent comp = null;
@@ -34,6 +37,14 @@ public class Event {
 			}
 		}
 		
+		// check key events
+		while(Keyboard.next()) {
+			if(Keyboard.getEventKey() == Keyboard.KEY_C &&
+					!Keyboard.getEventKeyState()) {
+				collision_view = !collision_view;
+			}
+		}
+		
 		// check Mouse position
 		pos = new Vector2f((float) Mouse.getX(), (float) Mouse.getY());
 		comp = GL.glPickObject(pos, Game.getUIComps());
@@ -42,6 +53,10 @@ public class Event {
 		if(comp != null) {
 			comp.onMouseOver();
 		}
+	}
+	
+	public static boolean isCollisionView() {
+		return collision_view;
 	}
 }
  	

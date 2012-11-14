@@ -17,10 +17,10 @@ public class Dirt extends Component {
 	private final float depth = 3f; 
 	
 	// sky to dirt absorption rate
-	private static final float absorption_rate = .0025f;
+	private static final float absorption_rate = .0015f;
 	
 	// dirt crystal apparition rate
-	private static final float crystal_rate = .0025f;
+	private static final float crystal_rate = .00025f;
 	
 	// constructor
 	public Dirt() {}
@@ -41,7 +41,7 @@ public class Dirt extends Component {
 		}
 		
 		// add new salt crystals
-		prob = Game.getRainRate()*crystal_rate*delta/1000f;
+		prob = (Game.RAIN_MAX - Game.getRainRate())*crystal_rate*delta/1000f;
 		while(Math.random() <= prob) {
 			--prob;
 			generateSaltCrystal();

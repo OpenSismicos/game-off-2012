@@ -155,9 +155,9 @@ public final class GL {
 		for(int i=0; i<comps.size(); ++i) {
 			comp = comps.get(i);
 			if(!comp.isPositionAbsolute()) {
-				color.x = (i % 256)/256f;
-				color.y = Math.min((int)(i/256f), 255)/256f;
-				color.z = Math.min((int)(i/256f/256f), 255)/256f;
+				color.x = (i % 256)/255f;
+				color.y = Math.min((int)Math.floor(i/256f), 255)/255f;
+				color.z = Math.min((int)Math.floor(i/256f/256f), 255)/255f;
 				comp.renderCollisionRect(color);
 			}
 		}
@@ -169,9 +169,9 @@ public final class GL {
 		for(int i=0; i<comps.size(); ++i) {
 			comp = comps.get(i);
 			if(comp.isPositionAbsolute()) {
-				color.x = (i % 256)/256f;
-				color.y = Math.min((int)(i/256f), 255)/256f;
-				color.z = Math.min((int)(i/256f/256f), 255)/256f;
+				color.x = (i % 256)/255f;
+				color.y = Math.min((int)Math.floor(i/256f), 255)/255f;
+				color.z = Math.min((int)Math.floor(i/256f/256f), 255)/255f;
 				comp.renderCollisionRect(color);
 			}
 		}	

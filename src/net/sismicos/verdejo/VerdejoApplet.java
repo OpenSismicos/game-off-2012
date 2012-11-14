@@ -14,21 +14,17 @@ public class VerdejoApplet extends Applet {
 	Thread game_thread;
 	boolean running = false;
 	
-	public void startLWJGL()
-	{
-		game_thread = new Thread()
-		{
-			public void run()
-			{
+	public void startLWJGL() {
+		game_thread = new Thread() {
+			public void run() {
 				running = true;
-				try
-				{
+				try {
 					Display.setParent(display_parent);
 					Display.create();
 					Display.setVSyncEnabled(true);
 					initLWJGL();
-				} catch (LWJGLException e)
-				{
+				}
+				catch (LWJGLException e) {
 					e.printStackTrace();
 				}
 				startGameLoop();
@@ -37,21 +33,17 @@ public class VerdejoApplet extends Applet {
 		game_thread.start();
 	}
 	
-	private void initLWJGL()
-	{
+	private void initLWJGL() {
 		Game.init();
 	}
 	
-	private void stopLWJGL()
-	{
+	private void stopLWJGL() {
 		running = false;
 		Game.exit();
-		try
-		{
+		try {
 			game_thread.join();
 		}
-		catch (InterruptedException e)
-		{
+		catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -59,27 +51,21 @@ public class VerdejoApplet extends Applet {
 	public void start() {}
 	public void stop() {}
 
-	public void destroy()
-	{
+	public void destroy() {
 		remove(display_parent);
 		super.destroy();
 	}
 	
-	public void init()
-	{
+	public void init() {
 		setLayout(new BorderLayout());
-		try
-		{
-			display_parent = new Canvas()
-			{
-				public final void addNotify()
-				{
+		try {
+			display_parent = new Canvas() {
+				public final void addNotify() {
 					super.addNotify();
 					startLWJGL();
 				}
 				
-				public final void removeNotify()
-				{
+				public final void removeNotify() {
 					stopLWJGL();
 					super.removeNotify();
 				}
@@ -92,8 +78,7 @@ public class VerdejoApplet extends Applet {
 			display_parent.setIgnoreRepaint(true);
 			setVisible(true);
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			System.err.println(e);
 			throw new RuntimeException("Unable to create display");
 		}
