@@ -17,6 +17,7 @@ import net.sismicos.verdejo.game.ui.TriangleUp;
 import net.sismicos.verdejo.game.ui.TriangleDown;
 import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.game.ui.UpperBar;
+import net.sismicos.verdejo.game.weather.WeatherMachine;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
@@ -44,7 +45,10 @@ public final class Game {
 	private static final int MAX_SALT = 10;
 	
 	// rate of rain drop generation in rain drops per second
-	private static float num_drops = 150f;
+	private static float num_drops = 0f;
+	
+	// system for weather variability
+	private static WeatherMachine weather = new WeatherMachine();
 	
 	// time of last call to getDelta()
 	private static long last_frame_time = 0L;
@@ -84,11 +88,18 @@ public final class Game {
 	 */
 	public static void init()
 	{
+		// initialize logger
+		Logger.setDebugLevel(2);
+		
+		// initialize graphics
 		initOpenGL();
 		
 		// initialize FPS
 		getDelta();
 		last_fps_time = getTime();
+		
+		// initialize weather
+		weather.init();
 		
 		// initialize the component lists
 		components = new ArrayList<Component>();
@@ -186,6 +197,9 @@ public final class Game {
 		
 		// update the FPS counter
 		updateFPS();
+		
+		// update the weather system
+		weather.update(delta);
 				
 		// make all UI invisible and dispose the ones inactive
 		for(int i=ui.size()-1; i>=0; --i) {
@@ -407,8 +421,20 @@ public final class Game {
 		return true;
 	}
 	
+	/**
+	 * Get the current rain drop rate.
+	 * @return Current rain drop rate
+	 */
 	public static float getRainRate() {
 		return num_drops;
+	}
+	
+	/**
+	 * Set the rain drop rate.
+	 * @param rain_rate Desired rain rate.
+	 */
+	public static void setRainRate(float rain_rate) {
+		num_drops = rain_rate;
 	}
 	
 	/**

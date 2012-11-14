@@ -188,7 +188,7 @@ public final class GL {
 		// return the selected Component
 		int index = ((byte)pixel.get(2))*256*256 + ((byte)pixel.get(1))*256 +
 				((byte)pixel.get(0));
-		if(index < comps.size()) {
+		if(index < comps.size() && index >= 0) {
 			return comps.get(index);
 		}
 		else {
