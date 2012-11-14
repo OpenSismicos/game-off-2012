@@ -32,7 +32,7 @@ public class Event {
 				
 				// click the component (if there is one)
 				if(comp != null && comp.isClickable() && comp.isVisible()) {
-					comp.click();
+					comp.click(new Vector2f(Mouse.getX(), Mouse.getY()));
 				}
 			}
 		}
@@ -51,7 +51,7 @@ public class Event {
 		
 		// show the component (if there is one)
 		if(comp != null) {
-			comp.onMouseOver();
+			comp.onMouseOver(new Vector2f(Mouse.getX(), Mouse.getY()));
 		}
 	}
 	

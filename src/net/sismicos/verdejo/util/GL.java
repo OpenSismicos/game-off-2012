@@ -59,6 +59,18 @@ public final class GL {
 	}
 	
 	/**
+	 * Draws a rectangle filled with the given color and with the given depth.
+	 * @param rect Rectangle coordinates.
+	 * @param depth Depth to place the rectangle in.
+	 * @param color Color to fill the rectangle with.
+	 */
+	public static void glDrawRectangle(Rectanglef rect, float depth,
+			Vector3f color) {
+		Vector4f color4 = new Vector4f(color.x, color.y, color.z, 1f);
+		glDrawRectangle(rect, depth, color4);
+	}
+	
+	/**
 	 * Draws a rectangle filled with the given color in the given position.
 	 * @param rect Rectangle coordinates.
 	 * @param position Position to place the rectangle.

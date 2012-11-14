@@ -30,7 +30,7 @@ public class WaterDrop extends UIComponent {
 	
 	// water drop geometry and color
 	private static final float radius = 4f;
-	private float depth = 4f;
+	private float depth = 4.85f;
 	private static final int segments = 10;
 	private static final Vector4f color = new Vector4f(27/255f, 132/255f,
 			186/255f, 1f);

@@ -28,11 +28,6 @@ public abstract class Component {
 	public abstract void render();
 	
 	/**
-	 * Action to perform when clicked. By default does nothing.
-	 */
-	public void click() {}
-	
-	/**
 	 * Determines if the Component moves with the camera.
 	 * @return Whether or not the Component moves with the camera. 
 	 */
@@ -55,16 +50,7 @@ public abstract class Component {
 	 * @param color
 	 */
 	public void renderCollisionRect(Vector3f color) {
-		GL11.glBegin(GL11.GL_QUADS);
-			GL.glColor3f(color);
-			GL11.glVertex2f(collision_rect.getX(), collision_rect.getY());
-			GL11.glVertex2f(collision_rect.getX() + collision_rect.getWidth(),
-					collision_rect.getY());
-			GL11.glVertex2f(collision_rect.getX() + collision_rect.getWidth(),
-					collision_rect.getY() + collision_rect.getHeight());
-			GL11.glVertex2f(collision_rect.getX(),
-					collision_rect.getY() + collision_rect.getHeight());			
-		GL11.glEnd();
+		GL.glDrawRectangle(collision_rect, 0f, color);
 	}
 	
 	/**

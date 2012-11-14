@@ -6,12 +6,14 @@ import java.util.Iterator;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import net.sismicos.verdejo.event.Event;
 import net.sismicos.verdejo.game.Component;
 import net.sismicos.verdejo.game.sky.Sky;
+import net.sismicos.verdejo.game.tree.TreeBranch;
 import net.sismicos.verdejo.game.dirt.Dirt;
 import net.sismicos.verdejo.game.grass.Grass;
 import net.sismicos.verdejo.game.ui.TriangleUp;
@@ -90,6 +92,11 @@ public final class Game {
     // camera-independant components
     private static ArrayList<UIComponent> ui = null;
     
+    // tree representation
+    private static final Vector2f TREE_INITIAL_POSITION =
+    		new Vector2f(200f, 600f);
+    private static TreeBranch tree = new TreeBranch(TREE_INITIAL_POSITION);
+    
 	// private constructor
 	private Game () {}
 	
@@ -111,11 +118,30 @@ public final class Game {
 		// initialize weather
 		weather.init();
 		
+		// fill up the initial tree
+		TreeBranch tree1 = new TreeBranch();
+		tree1.addBranch();
+		tree1.addBranch();
+		tree1.addBranch();
+		TreeBranch tree2 = new TreeBranch();
+		tree2.addBranch();
+		tree2.addBranch();
+		TreeBranch tree3 = new TreeBranch();
+		tree3.addBranch();
+		TreeBranch tree31 = new TreeBranch();
+		tree31.addBranch();
+		tree31.addBranch();
+		tree3.addBranch(tree31);
+		tree.addBranch(tree1);
+		tree.addBranch(tree2);
+		tree.addBranch(tree3);
+		
 		// initialize the component lists
 		components = new ArrayList<Component>();
 		ui = new ArrayList<UIComponent>();
 		
 		// build the components
+		ui.add(tree);
 		components.add(new Grass());
 		components.add(new Sky());
 		components.add(new Dirt());

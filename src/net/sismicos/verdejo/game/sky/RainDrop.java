@@ -26,7 +26,7 @@ public class RainDrop extends Component {
 	
 	// rain drop geometry
 	private static final Rectanglef rect = new Rectanglef(0f, 0f, 4f, 10f);
-	private static final float depth = 2f;
+	private static final float depth = 4.5f;
 	
 	// rain drop color
 	private static final Vector4f color = new Vector4f(0f, 0f, 0f, .25f);

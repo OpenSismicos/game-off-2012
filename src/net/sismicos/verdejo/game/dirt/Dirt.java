@@ -14,7 +14,7 @@ public class Dirt extends Component {
 
 	// position
 	private Rectanglef rect = new Rectanglef(Game.LOWER_VIEW);
-	private final float depth = 3f; 
+	private final float depth = 4.75f; 
 	
 	// sky to dirt absorption rate
 	private static final float absorption_rate = .0015f;

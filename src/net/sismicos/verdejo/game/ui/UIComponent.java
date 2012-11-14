@@ -1,5 +1,7 @@
 package net.sismicos.verdejo.game.ui;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import net.sismicos.verdejo.game.Component;
 
 public abstract class UIComponent extends Component {
@@ -40,6 +42,21 @@ public abstract class UIComponent extends Component {
 	}
 	
 	/**
+	 * Called when the mouse is over the Component. Provides the mouse position 
+	 * on the screen. By default calls the zero-argument onMouseOver() method.
+	 */
+	public void onMouseOver(Vector2f pos) {
+		onMouseOver();
+	}
+	/**
+	 * Called when the mouse is off the Component. Provides the mouse position 
+	 * on the screen. By default calls the zero-argument onMouseOver() method.
+	 */
+	public void onMouseOff(Vector2f pos) {
+		onMouseOff();
+	}
+	
+	/**
 	 * Hide the Component.
 	 */
 	public void hide() {
@@ -58,6 +75,19 @@ public abstract class UIComponent extends Component {
 	@Override
 	public boolean isVisible() {
 		return visible;
+	}
+	
+	/**
+	 * Action to perform when clicked. By default does nothing.
+	 */
+	public void click() {}
+	
+	/**
+	 * Action to perform when clicked. Provides the click position on the 
+	 * screen. By default calls the zero-argument click method.
+	 */
+	public void click(Vector2f position) { 
+		click();
 	}
 	
 	/**

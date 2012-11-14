@@ -30,7 +30,7 @@ public class SaltCrystal extends UIComponent {
 	
 	// salt crystal geometry and color
 	private float radius = 4f;
-	private float depth = 4f;
+	private float depth = 4.85f;
 	private static final int segments = 4;
 	private static final Vector4f color = new Vector4f(1f, 1f, 1f, 0.9f);
 	private static final float INIT_RADIUS = 5f;
