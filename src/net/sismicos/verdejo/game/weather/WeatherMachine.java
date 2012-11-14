@@ -9,9 +9,10 @@ public class WeatherMachine {
 	
 	// length in minutes of the weather forecast
 	private static final int LENGTH_FORECAST = 20;
+	private static final int SECONDS_PER_CYCLE = 10;
 	
 	// constant increment/decrement in rain per second
-	private static final float RAIN_INC = Game.RAIN_MAX/60f;
+	private static final float RAIN_INC = Game.RAIN_MAX/SECONDS_PER_CYCLE;
 	
 	// variability of rain in rain per second
 	private static final float RAIN_VAR = RAIN_INC*1f;
@@ -56,11 +57,13 @@ public class WeatherMachine {
 	public void update(int delta) {
 		// update time
 		current_time += (long) delta;
-		current_time = current_time % (1000L*60L*(long)LENGTH_FORECAST);
+		current_time = current_time %
+				(1000L*SECONDS_PER_CYCLE*(long)LENGTH_FORECAST);
 		
 		// get the current tendency
 		int tendency = 0;
-		int current_min = (int) Math.floor((double) current_time/1000f/60f);
+		int current_min = 
+				(int) Math.floor((double) current_time/1000f/SECONDS_PER_CYCLE);
 		current_min %= LENGTH_FORECAST;
 		int next_min = (current_min+1) % LENGTH_FORECAST;
 		if(is_raining[current_min] != is_raining[next_min]) {

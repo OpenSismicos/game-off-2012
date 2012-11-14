@@ -17,10 +17,10 @@ public class Dirt extends Component {
 	private final float depth = 4.75f; 
 	
 	// sky to dirt absorption rate
-	private static final float absorption_rate = .0015f;
+	private static final float absorption_rate = .006f;
 	
 	// dirt crystal apparition rate
-	private static final float crystal_rate = .00025f;
+	private static final float crystal_rate = .002f;
 	
 	// constructor
 	public Dirt() {}
@@ -61,11 +61,6 @@ public class Dirt extends Component {
 	
 	@Override
 	public boolean isVisible() {
-		return true;
-	}
-
-	@Override
-	public boolean isClickable() {
 		return true;
 	}
 	

@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
+import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
@@ -34,9 +35,6 @@ public class TreeBranch extends UIComponent {
 	
 	// maximum number of sub branches
 	private static int MAX_BRANCHES = 4;
-	
-	// flag to check if branch is visible to collisions
-	private boolean collision_visible = true;
 	
 	/**
 	 * Public constructor. Initializes the initial position to zero.
@@ -83,9 +81,15 @@ public class TreeBranch extends UIComponent {
 	
 	@Override
 	public void init() {
+		// get a non-volatile collision color
+		setCollisionColor(ColorDispatcher.reserveColor());
+		
 		// get sub branch angles
 		angles = calculateSubBranchAngles(branches.size());
 	}
+
+	@Override
+	public void update(int delta) {}
 
 	@Override
 	public void render() {
@@ -125,70 +129,75 @@ public class TreeBranch extends UIComponent {
 	}
 	
 	@Override
-	public void renderCollisionRect(Vector3f color) {
-		if(collision_visible) {
-			
+	public void renderCollisionRect() {
+		// save state
+		GL11.glPushMatrix();
+
+		// translate to the end of my branch
+		GL11.glTranslatef(position.x, position.y + rect.getHeight(), 0f);
+		
+		// draw sub branches
+		for(int i=0; i<branches.size(); ++i) {
 			// save state
 			GL11.glPushMatrix();
-	
-			// translate to the end of my branch
-			GL11.glTranslatef(position.x, position.y + rect.getHeight(), 0f);
 			
-			// draw sub branches
-			for(int i=0; i<branches.size(); ++i) {
-				// save state
-				GL11.glPushMatrix();
-				
-				// rotate for the branch
-				GL11.glRotatef(angles[i], 0f, 0f, 1f);
-				
-				// draw the sub branch
-				branches.get(i).renderCollisionRect(color);
-				
-				// restore state
-				GL11.glPopMatrix();
-			}
+			// rotate for the branch
+			GL11.glRotatef(angles[i], 0f, 0f, 1f);
 			
-			// recover original state
+			// draw the sub branch
+			branches.get(i).renderCollisionRect();
+			
+			// restore state
 			GL11.glPopMatrix();
-			GL11.glPushMatrix();
-			
-			// translate
-			GL11.glTranslatef(position.x, position.y, 0f);
-			
-			// draw my branch
-			GL.glDrawRectangle(rect, depth, color);
-			
-			// recover original state
-			GL11.glPopMatrix();
-			
 		}
+		
+		// recover original state
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		
+		// translate
+		GL11.glTranslatef(position.x, position.y, 0f);
+		
+		// draw the collision rectangle of my branch
+		GL.glDrawRectangle(rect, depth, getCollisionColor());
+		
+		// recover original state
+		GL11.glPopMatrix();
 	}
-	
+
 	@Override
-	public void onMouseOver(Vector2f pos) {
-		Vector2f new_pos = new Vector2f(pos);
-		Vector2f.sub(new_pos,
-				new Vector2f(position.x, position.y + rect.getHeight()),
-				new_pos);
-		UIComponent comp = GL.glPickObject(new_pos, branches);
-		if(comp == null) {
-			color = selected_color;
+	public void click(Vector3f color) {
+		if(ColorDispatcher.compareColors(color, getCollisionColor())) {
+			click();
 		}
 		else {
-			comp.onMouseOver(pos);
+			Iterator<UIComponent> it = branches.iterator();
+			while(it.hasNext()) {
+				it.next().click(color);
+			}
 		}
 	}
 	
 	@Override
-	public void onMouseOff() {
+	public void click() {
+		color = selected_color;
+	}
+	
+	@Override
+	public void unclick() {
 		color = original_color;
 		
 		Iterator<UIComponent> it = branches.iterator();
 		while(it.hasNext()) {
-			it.next().onMouseOver();
+			it.next().unclick();
 		}
 	}
+	
+	@Override
+	public void onMouseOver() {}
+	
+	@Override
+	public void onMouseOff() {}
 
 	@Override
 	public boolean isPositionAbsolute() {

@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import net.sismicos.verdejo.game.Game;
 import net.sismicos.verdejo.game.ui.UIComponent;
+import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
@@ -42,6 +43,9 @@ public class WaterDrop extends UIComponent {
 
 	@Override
 	public void init() {
+		// get a volatile collision color
+		setCollisionColor(ColorDispatcher.reserveVolatileColor());
+		
 		// randomize initial position
 		position.set((float) Math.random()*Game.WIDTH, 
 				STARTING_HEIGHT - (float)Math.random()*STARTING_HEIGHT_VAR);
@@ -49,9 +53,7 @@ public class WaterDrop extends UIComponent {
 	}
 	
 	@Override
-	public void update(int delta) {
-		super.update(delta);
-		
+	public void update(int delta) {		
 		// update the collision rectangle
 		setCollisionRect(new Rectanglef(position.x-radius-2f, 
 				position.y-radius-2f, 2f*radius+4f, 2f*radius+4f));
@@ -128,4 +130,12 @@ public class WaterDrop extends UIComponent {
 		clicked = true;
 	}
 
+	@Override
+	public void unclick() {}
+	
+	@Override
+	public void onMouseOver() {}
+
+	@Override
+	public void onMouseOff() {}
 }

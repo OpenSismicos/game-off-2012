@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import net.sismicos.verdejo.game.Game;
 import net.sismicos.verdejo.game.ui.UIComponent;
+import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
@@ -48,17 +49,19 @@ public class SaltCrystal extends UIComponent {
 
 	@Override
 	public void init() {
+		// get a volatile collision color
+		setCollisionColor(ColorDispatcher.reserveVolatileColor());
+		
 		// randomize initial position
 		position.set((float) (Math.random()-0.5f)*APPEARANCE_WIDTH
 				+ Game.WIDTH/2f, STARTING_HEIGHT - 
 				(float)(Math.random()-.5f)*STARTING_HEIGHT_VAR);
+		
 		show();
 	}
 	
 	@Override
 	public void update(int delta) {
-		super.update(delta);
-		
 		// update the collision rectangle
 		setCollisionRect(new Rectanglef(position.x-radius-2f, 
 				position.y-radius-2f, 2f*radius+4f, 2f*radius+4f));
@@ -138,4 +141,13 @@ public class SaltCrystal extends UIComponent {
 		// has been clicked
 		clicked = true;
 	}
+	
+	@Override
+	public void unclick() {}
+
+	@Override
+	public void onMouseOver() {}
+
+	@Override
+	public void onMouseOff() {}
 }

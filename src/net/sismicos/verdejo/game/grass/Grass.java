@@ -50,9 +50,4 @@ public class Grass extends Component {
 	public boolean isVisible() {
 		return true;
 	}
-
-	@Override
-	public boolean isClickable() {
-		return true;
-	}
 }

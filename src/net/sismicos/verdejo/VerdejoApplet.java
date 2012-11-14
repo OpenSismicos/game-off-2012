@@ -7,13 +7,17 @@ import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 
 import net.sismicos.verdejo.game.Game;
 import net.sismicos.verdejo.logger.Logger;
 
 public class VerdejoApplet extends Applet implements Runnable {
+	/**
+	 * Serial version UID to make Eclipse stop complaining about it.
+	 */
+	private static final long serialVersionUID = 8542785583823084649L;
+	
 	Canvas canvas;
 	Thread game_thread;
 	boolean running = false;

@@ -1,60 +1,43 @@
 package net.sismicos.verdejo.game.ui;
 
-import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import net.sismicos.verdejo.game.Component;
+import net.sismicos.verdejo.util.ColorDispatcher;
+import net.sismicos.verdejo.util.GL;
+import net.sismicos.verdejo.util.Rectanglef;
 
 public abstract class UIComponent extends Component {
+
+	// collision rectangle and color
+	private Rectanglef collision_rect = new Rectanglef(0f, 0f, 0f, 0f);
+	private Vector3f collision_color = ColorDispatcher.FAIL_COLOR;
 	
 	// visibility flag
 	private boolean visible = false;
 	
-	// flag to check if the mouse is over
-	private boolean mouse_over = false;
-	
-	// transparency of the component
-	private float alpha = 1f;
-	
-	// transparency increment (amount per second)
-	private float alpha_inc = 1f/3f;
-	
 	@Override
-	public void update(int delta) {
-		if(mouse_over && alpha < 1f) {
-			alpha = Math.min(alpha + alpha_inc*delta/1000f, 1f);
-		}
-		else if(!mouse_over && alpha > 0f) {
-			alpha = Math.max(alpha - alpha_inc*delta/1000f, 0f);
-		}
-	}
-	
-	/**
-	 * Called when the mouse is over the Component.
-	 */
-	public void onMouseOver() {
-		mouse_over = true;
-	}
-	/**
-	 * Called when the mouse is off the Component.
-	 */
-	public void onMouseOff() {
-		mouse_over = false;
-	}
+	public abstract void update(int delta);
 	
 	/**
 	 * Called when the mouse is over the Component. Provides the mouse position 
-	 * on the screen. By default calls the zero-argument onMouseOver() method.
+	 * on the screen.
 	 */
-	public void onMouseOver(Vector2f pos) {
-		onMouseOver();
+	public void onMouseOver(Vector3f color) {
+		if(ColorDispatcher.compareColors(color, collision_color)) {
+			onMouseOver();
+		}
 	}
+	
 	/**
-	 * Called when the mouse is off the Component. Provides the mouse position 
-	 * on the screen. By default calls the zero-argument onMouseOver() method.
+	 * Called when the mouse is over the UIComponent.
 	 */
-	public void onMouseOff(Vector2f pos) {
-		onMouseOff();
-	}
+	public abstract void onMouseOver();
+	
+	/**
+	 * Called when the mouse is off the UIComponent.
+	 */
+	public abstract void onMouseOff();
 	
 	/**
 	 * Hide the Component.
@@ -76,19 +59,31 @@ public abstract class UIComponent extends Component {
 	public boolean isVisible() {
 		return visible;
 	}
+
+	/**
+	 * Determines if the Component responds to clicks.
+	 * @return Whether or not the Component responds to click.
+	 */
+	public abstract boolean isClickable();
 	
 	/**
-	 * Action to perform when clicked. By default does nothing.
+	 * Checker if the propagating click is for us.
 	 */
-	public void click() {}
-	
-	/**
-	 * Action to perform when clicked. Provides the click position on the 
-	 * screen. By default calls the zero-argument click method.
-	 */
-	public void click(Vector2f position) { 
-		click();
+	public void click(Vector3f color) { 
+		if(ColorDispatcher.compareColors(color, collision_color)) {
+			click();
+		}
 	}
+	
+	/**
+	 * Action to be performed when clicked.
+	 */
+	public abstract void click();
+	
+	/**
+	 * Action to be performed when unclicked.
+	 */
+	public abstract void unclick();
 	
 	/**
 	 * Check if the component is ready for disposal.
@@ -97,24 +92,30 @@ public abstract class UIComponent extends Component {
 	public abstract boolean isDisposable();
 	
 	/**
-	 * Get/Set the current transparency value.
+	 * Render the collision rectangle with the given color.
+	 * @param color
 	 */
-	public float getAlpha() {
-		return alpha;
-	}
-	public void setAlpha(float alpha) {
-		this.alpha = alpha;
+	public void renderCollisionRect() {
+		GL.glDrawRectangle(collision_rect, 0f, collision_color);
 	}
 	
 	/**
-	 * Get/Set the current transparency increment. The increment is in units of
-	 * amount of transparency per second. A value of 1f goes from completely 
-	 * visible to completely invisible in 1 second. 
+	 * Get/Set the collision rectangle of the UIComponent.
 	 */
-	public float getAlphaInc() {
-		return alpha_inc;
+	public Rectanglef getCollisionRect() {
+		return new Rectanglef(collision_rect);
 	}
-	public void setAlphaInc(float alpha_inc) {
-		this.alpha_inc = alpha_inc;
+	public void setCollisionRect(Rectanglef rect) {
+		collision_rect = rect;
+	}
+	
+	/**
+	 * Get/Set the collision color of the UIComponent.
+	 */
+	public Vector3f getCollisionColor() {
+		return new Vector3f(collision_color);
+	}
+	public void setCollisionColor(Vector3f color) {
+		collision_color = new Vector3f(color);
 	}
 }

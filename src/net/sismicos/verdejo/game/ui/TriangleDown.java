@@ -3,12 +3,12 @@ package net.sismicos.verdejo.game.ui;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector4f;
 
-import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.game.Game;
+import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
-public class TriangleDown extends UIComponent {
+public class TriangleDown extends VanishingComponent {
 	private Vector4f color = new Vector4f(242/255f, 132/255f, 13/255f, 1f);
 	
 	private final float DEPTH = 9f;
@@ -17,6 +17,9 @@ public class TriangleDown extends UIComponent {
 	
 	@Override
 	public void init() {
+		// get a non-volatile collision color
+		setCollisionColor(ColorDispatcher.reserveColor());
+		
 		setCollisionRect(new Rectanglef(0f, Game.HEIGHT - VPAD - SIDE, 
 				Game.WIDTH, SIDE));
 		setAlphaInc(1f/.5f);
@@ -47,7 +50,7 @@ public class TriangleDown extends UIComponent {
 					Game.HEIGHT - (VPAD + SIDE), DEPTH);
 		GL11.glEnd();	
 	}
-
+	
 	@Override
 	public boolean isPositionAbsolute() {
 		return true;
@@ -62,6 +65,9 @@ public class TriangleDown extends UIComponent {
 	public void click() {
 		Game.moveDown();
 	}
+	
+	@Override
+	public void unclick() {}
 	
 	@Override
 	public boolean isDisposable() {

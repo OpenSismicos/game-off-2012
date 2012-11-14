@@ -74,10 +74,4 @@ public class UpperBar extends Component {
 	public boolean isVisible() {
 		return true;
 	}
-
-	@Override
-	public boolean isClickable() {
-		return false;
-	}
-
 }

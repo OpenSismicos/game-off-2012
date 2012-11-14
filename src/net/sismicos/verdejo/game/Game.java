@@ -22,6 +22,7 @@ import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.game.ui.UpperBar;
 import net.sismicos.verdejo.game.weather.WeatherMachine;
 import net.sismicos.verdejo.logger.Logger;
+import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
@@ -165,7 +166,7 @@ public final class Game {
 	{
 		//GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glClearColor(.259f, .294f, .529f, 0f);
+        GL.glClearColor(ColorDispatcher.FAIL_COLOR);
         
         // enable alpha blending
         GL11.glEnable(GL11.GL_BLEND);
@@ -370,6 +371,43 @@ public final class Game {
 		GL.glDrawRectangle(border, 11f, border_color);
 	}
 	
+	public static void renderCollisionRects() {
+		// disable lighting and textures
+		GL11.glDisable(GL11.GL_TEXTURE);
+		
+		// render Components
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		
+		// camera translation
+		GL.glTranslatef(Game.getCameraPos());
+		
+		// camera-relative components
+		UIComponent comp = null;
+		for(int i=0; i<ui.size(); ++i) {
+			comp = ui.get(i);
+			if(!comp.isPositionAbsolute()) {
+				comp.renderCollisionRect();
+			}
+		}
+		
+		// reset matrices for UI
+		GL11.glLoadIdentity();
+		
+		// position-absolute components
+		for(int i=0; i<ui.size(); ++i) {
+			comp = ui.get(i);
+			if(comp.isPositionAbsolute()) {
+				comp.renderCollisionRect();
+			}
+		}
+		
+		// enable lighting and textures
+		GL11.glEnable(GL11.GL_TEXTURE);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
 	/**
 	 * Move the camera down (to see the root)
 	 */
@@ -533,5 +571,4 @@ public final class Game {
 	{
 		return (Sys.getTime() * 1000L) / Sys.getTimerResolution();
 	}
-
 }

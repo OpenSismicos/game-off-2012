@@ -68,11 +68,6 @@ public class RainDrop extends Component {
 		return true;
 	}
 
-	@Override
-	public boolean isClickable() {
-		return false;
-	}
-
 	/**
 	 * Checks whether the RainDrop is to be disposed.
 	 * @return

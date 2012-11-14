@@ -75,11 +75,6 @@ public class Sky extends Component {
 	public boolean isVisible() {
 		return true;
 	}
-
-	@Override
-	public boolean isClickable() {
-		return true;
-	}
 	
 	/**
 	 * Generates a rain drop, initializes it, and adds it to the rain drop 
