@@ -97,7 +97,8 @@ public final class GL {
 		GL11.glPushMatrix();
 		
 		// translate to its position
-		GL11.glLoadIdentity();
+		// FIX: Do not load identity unless you want to override camera!
+		//GL11.glLoadIdentity();
 		GL.glTranslatef(position);
 		
 		// draw the rectangle
