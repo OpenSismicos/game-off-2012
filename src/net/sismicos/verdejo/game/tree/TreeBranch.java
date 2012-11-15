@@ -17,7 +17,7 @@ import net.sismicos.verdejo.util.Trapezoidf;
 public class TreeBranch extends UIComponent {
 	
 	// branch geometry
-	private Trapezoidf trap = new Trapezoidf(0f, 0f, 15f, 15f, -150f);
+	private Trapezoidf trap = new Trapezoidf(0f, 0f, 60f, 70f, -150f);
 	private final float depth = 4f;
 	private Vector4f color = new Vector4f(152f/255f, 81f/255f, 
 			12f/255f, 1f);
@@ -25,6 +25,16 @@ public class TreeBranch extends UIComponent {
 			81f/255f, 12f/255f, 1f);
 	private static final Vector4f selected_color = new Vector4f(176f/255f, 
 			122f/255f, 70f/255f, 1f);
+	
+	// branch widths changes
+	private static final float base_min = 8f;
+	private static final float base_max = 60f;
+	private static final float head_min = 2f;
+	private static final float head_max = 50f;
+	
+	// branch level, i.e., number of children branches
+	private int level = 0; 
+	private int max_level = 64;
 	
 	// sub branches
 	private ArrayList<UIComponent> branches = new ArrayList<UIComponent>();
@@ -89,7 +99,35 @@ public class TreeBranch extends UIComponent {
 	}
 
 	@Override
-	public void update(int delta) {}
+	public void update(int delta) {
+		// change trapezoid geometry according to level
+		trap.setBaseWidth((base_max - base_min) * 
+				(float)Math.sqrt((float)(level-1f)/(float)max_level)
+				+ base_min);
+		trap.setHeadWidth((head_max - head_min) *
+				(float)Math.sqrt((float)(level-1f)/(float)max_level)
+				+ head_min);
+		
+		// update rest of branches
+		Iterator<UIComponent> it = branches.iterator();
+		while(it.hasNext()) {
+			it.next().update(delta);
+		}
+	}
+	
+	/**
+	 * Updates the level of all children and itself.
+	 * @return The current level.
+	 */
+	public int calculateBranchLevel() {
+		int cur_level = 1;
+		Iterator<UIComponent> it = branches.iterator();
+		while(it.hasNext()) {
+			cur_level += ((TreeBranch)it.next()).calculateBranchLevel();
+		}
+		level = cur_level;
+		return level;
+	}
 
 	@Override
 	public void render() {
@@ -97,7 +135,7 @@ public class TreeBranch extends UIComponent {
 		GL11.glPushMatrix();
 
 		// translate to the end of my branch
-		GL11.glTranslatef(position.x, position.y + trap.getHeight(), 0f);
+		GL11.glTranslatef(position.x, position.y + trap.getHeight() + 4f, 0f);
 		
 		// draw sub branches
 		for(int i=0; i<branches.size(); ++i) {

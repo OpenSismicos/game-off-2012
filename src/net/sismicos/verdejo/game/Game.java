@@ -261,6 +261,9 @@ public final class Game {
 		// update the input events
 		Event.update(delta);
 		
+		// update tree level
+		tree.calculateBranchLevel();
+		
 		// update the components
 		it = components.iterator();
 		while(it.hasNext()) {
