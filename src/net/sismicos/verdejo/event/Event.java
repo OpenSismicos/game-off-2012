@@ -27,6 +27,13 @@ public class Event {
 			if(Mouse.getEventButton() == 0 &&
 					Mouse.getEventButtonState() == false) {
 				
+				// unclick all elements
+				Iterator<UIComponent> it = Game.getUIComps().iterator();
+				while(it.hasNext()) {
+					UIComponent comp = it.next();
+						comp.unclick();
+				}
+				
 				Logger.printDebug("MouseUp on Button 0 @ (" + Mouse.getX() +
 						", " + Mouse.getY() + ")", 2);
 				
@@ -35,13 +42,10 @@ public class Event {
 				// click the component (if there is one)
 				if(!ColorDispatcher.compareColors(comp_color, 
 						ColorDispatcher.FAIL_COLOR)) {
-					Iterator<UIComponent> it = Game.getUIComps().iterator();
+					it = Game.getUIComps().iterator();
 					while(it.hasNext()) {
 						UIComponent comp = it.next();
-						if(comp.isClickable() && comp.isVisible()) {
-							// first unclick
-							comp.unclick();
-							
+						if(comp.isClickable() && comp.isVisible()) {							
 							// then, click if it is the case
 							comp.click(comp_color);
 						}
