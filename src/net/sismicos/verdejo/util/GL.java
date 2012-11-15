@@ -240,8 +240,8 @@ public final class GL {
 				1, 1, GL11.GL_BLUE, GL11.GL_UNSIGNED_BYTE, blue);
 		
 		// return the selected Component
-		return new Vector3f((byte)red.get(0)/255f, (byte)green.get(0)/255f, 
-				(byte)blue.get(0)/255f);
+		return new Vector3f((int)red.get(0)/255f, (int)green.get(0)/255f, 
+				(int)blue.get(0)/255f);
 	}
 	
 	/**
