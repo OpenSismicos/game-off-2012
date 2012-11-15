@@ -12,12 +12,12 @@ import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
-import net.sismicos.verdejo.util.Rectanglef;
+import net.sismicos.verdejo.util.Trapezoidf;
 
 public class TreeBranch extends UIComponent {
 	
 	// branch geometry
-	private Rectanglef rect = new Rectanglef(-7f, 0f, 14f, -150f);
+	private Trapezoidf trap = new Trapezoidf(0f, 0f, 15f, 15f, -150f);
 	private final float depth = 4f;
 	private Vector4f color = new Vector4f(152f/255f, 81f/255f, 
 			12f/255f, 1f);
@@ -97,7 +97,7 @@ public class TreeBranch extends UIComponent {
 		GL11.glPushMatrix();
 
 		// translate to the end of my branch
-		GL11.glTranslatef(position.x, position.y + rect.getHeight(), 0f);
+		GL11.glTranslatef(position.x, position.y + trap.getHeight(), 0f);
 		
 		// draw sub branches
 		for(int i=0; i<branches.size(); ++i) {
@@ -122,7 +122,7 @@ public class TreeBranch extends UIComponent {
 		GL11.glTranslatef(position.x, position.y, 0f);
 		
 		// draw my branch
-		GL.glDrawRectangle(rect, depth, color);
+		GL.glDrawTrapezoid(trap, depth, color);
 		
 		// recover original state
 		GL11.glPopMatrix();
@@ -134,7 +134,7 @@ public class TreeBranch extends UIComponent {
 		GL11.glPushMatrix();
 
 		// translate to the end of my branch
-		GL11.glTranslatef(position.x, position.y + rect.getHeight(), 0f);
+		GL11.glTranslatef(position.x, position.y + trap.getHeight(), 0f);
 		
 		// draw sub branches
 		for(int i=0; i<branches.size(); ++i) {
@@ -159,7 +159,7 @@ public class TreeBranch extends UIComponent {
 		GL11.glTranslatef(position.x, position.y, 0f);
 		
 		// draw the collision rectangle of my branch
-		GL.glDrawRectangle(rect, depth, getCollisionColor());
+		GL.glDrawTrapezoid(trap, depth, getCollisionColor());
 		
 		// recover original state
 		GL11.glPopMatrix();

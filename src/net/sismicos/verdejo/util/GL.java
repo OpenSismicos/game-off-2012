@@ -116,6 +116,70 @@ public final class GL {
 	}
 	
 	/**
+	 * Draws a trapezoid filled with the given color in the given position.
+	 * @param rect Trapezoid coordinates.
+	 * @param position Position to place the center of the base of the 
+	 * trapezoid.
+	 * @param color Color to fill the trapezoid with.
+	 */
+	public static void glDrawTrapezoid(Trapezoidf trap, Vector3f position,
+			Vector4f color) {
+		// save the MODELVIEW matrix for later
+		GL11.glPushMatrix();
+		
+		// translate to its position
+		GL.glTranslatef(position);
+		
+		// draw the rectangle
+		GL11.glBegin(GL11.GL_QUADS);
+			GL.glColor4f(color);
+			GL11.glVertex2f(trap.getX() - trap.getBaseWidth()/2f, trap.getY());
+			GL11.glVertex2f(trap.getX() - trap.getHeadWidth()/2f, 
+					trap.getY() - trap.getHeight());
+			GL11.glVertex2f(trap.getX() + trap.getHeadWidth()/2f, 
+					trap.getY() - trap.getHeight());
+			GL11.glVertex2f(trap.getX() + trap.getBaseWidth()/2f, trap.getY());
+		GL11.glEnd();
+		
+		// restore the MODELVIEW matrix
+		GL11.glPopMatrix();
+	}
+	
+	/**
+	 * Draws a trapezoid filled with the given color and with the given depth.
+	 * @param trap Trapezoid coordinates.
+	 * @param depth Depth to place the trapezoid in.
+	 * @param color Color to fill the trapezoid with.
+	 */
+	public static void glDrawTrapezoid(Trapezoidf trap, float depth,
+			Vector4f color) {
+		// draw the rectangle
+		GL11.glBegin(GL11.GL_QUADS);
+			GL.glColor4f(color);
+			GL11.glVertex3f(trap.getX() - trap.getBaseWidth()/2f, trap.getY(),
+					depth);
+			GL11.glVertex3f(trap.getX() - trap.getHeadWidth()/2f, 
+					trap.getY() + trap.getHeight(), depth);
+			GL11.glVertex3f(trap.getX() + trap.getHeadWidth()/2f,
+					trap.getY() + trap.getHeight(), depth);
+			GL11.glVertex3f(trap.getX() + trap.getBaseWidth()/2f, trap.getY(),
+					depth);
+		GL11.glEnd();
+	}
+	
+	/**
+	 * Draws a trapezoid filled with the given color and with the given depth.
+	 * @param trap Trapezoid coordinates.
+	 * @param depth Depth to place the trapezoid in.
+	 * @param color Color to fill the trapezoid with.
+	 */
+	public static void glDrawTrapezoid(Trapezoidf rect, float depth,
+			Vector3f color) {
+		Vector4f color4 = new Vector4f(color.x, color.y, color.z, 1f);
+		glDrawTrapezoid(rect, depth, color4);
+	}
+	
+	/**
 	 * Draws a circle with given radius filled with the given color in the given
 	 * position. The circle is made from the given number of triangles. 
 	 * @param position Where to place the circle.
