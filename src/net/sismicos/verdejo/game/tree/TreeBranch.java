@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import net.sismicos.verdejo.game.Game;
 import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.ColorDispatcher;
@@ -254,6 +255,7 @@ public class TreeBranch extends UIComponent {
 	@Override
 	public void click() {
 		color = selected_color;
+		Game.showUpgradeBranch();
 	}
 	
 	@Override

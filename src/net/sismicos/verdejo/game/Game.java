@@ -19,6 +19,7 @@ import net.sismicos.verdejo.game.grass.Grass;
 import net.sismicos.verdejo.game.ui.TriangleUp;
 import net.sismicos.verdejo.game.ui.TriangleDown;
 import net.sismicos.verdejo.game.ui.UIComponent;
+import net.sismicos.verdejo.game.ui.UpgradeBranch;
 import net.sismicos.verdejo.game.ui.UpperBar;
 import net.sismicos.verdejo.game.weather.WeatherMachine;
 import net.sismicos.verdejo.logger.Logger;
@@ -98,6 +99,9 @@ public final class Game {
     		new Vector2f(200f, 600f);
     private static TreeBranch tree = new TreeBranch(TREE_INITIAL_POSITION);
     
+    // tree upgrade UI component
+    private static UpgradeBranch upgrade = new UpgradeBranch();
+    
 	// private constructor
 	private Game () {}
 	
@@ -143,6 +147,7 @@ public final class Game {
 		
 		// build the components
 		ui.add(tree);
+		ui.add(upgrade);
 		components.add(new Grass());
 		components.add(new Sky());
 		components.add(new Dirt());
@@ -409,6 +414,24 @@ public final class Game {
 		// enable lighting and textures
 		GL11.glEnable(GL11.GL_TEXTURE);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
+	/**
+	 * Changes position of the branch upgrade button.
+	 * @param position New position for the button.
+	 */
+	public static void moveUpgradeBranch(Vector2f position) {
+		upgrade.setPosition(position);
+	}
+	
+	/**
+	 * Shows/Hides the branch upgrade button.
+	 */
+	public static void showUpgradeBranch() {
+		upgrade.show();
+	}
+	public static void hideUpgradeBranch() {
+		upgrade.hide();
 	}
 	
 	/**

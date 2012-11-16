@@ -37,7 +37,11 @@ public class Event {
 				Logger.printDebug("MouseUp on Button 0 @ (" + Mouse.getX() +
 						", " + Mouse.getY() + ")", 2);
 				
-				comp_color = GL.glPickColor(pos);
+				// ONLY FOR DEBUG PURPOSES
+				//comp_color = GL.glPickColor(pos);
+				
+				// change position of branch upgrade UI controller
+				Game.moveUpgradeBranch(pos);
 				
 				// click the component (if there is one)
 				if(!ColorDispatcher.compareColors(comp_color, 
