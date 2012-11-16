@@ -17,7 +17,7 @@ import net.sismicos.verdejo.util.Trapezoidf;
 public class TreeBranch extends UIComponent {
 	
 	// branch geometry
-	private Trapezoidf trap = new Trapezoidf(0f, 0f, 60f, 70f, -150f);
+	private Trapezoidf trap = new Trapezoidf(0f, 0f, 60f, 70f, 20f);
 	private final float depth = 4f;
 	private Vector4f color = new Vector4f(152f/255f, 81f/255f, 
 			12f/255f, 1f);
@@ -26,11 +26,21 @@ public class TreeBranch extends UIComponent {
 	private static final Vector4f selected_color = new Vector4f(176f/255f, 
 			122f/255f, 70f/255f, 1f);
 	
-	// branch widths changes
+	// branch width limits
 	private static final float base_min = 8f;
 	private static final float base_max = 60f;
-	private static final float head_min = 2f;
+	private static final float head_min = 1f;
 	private static final float head_max = 50f;
+	
+	// branch width changes
+	private float current_base_width_max = 2f;
+	private float current_head_width_max = 8f;
+	private static final float width_inc = 2f;
+	
+	// branch length changes
+	private float current_length_max = 100f;
+	private static final float length_inc = 2f;
+	private static final float length_max = 160f;
 	
 	// branch level, i.e., number of children branches
 	private int level = 0; 
@@ -100,19 +110,36 @@ public class TreeBranch extends UIComponent {
 
 	@Override
 	public void update(int delta) {
-		// change trapezoid geometry according to level
-		trap.setBaseWidth((base_max - base_min) * 
-				(float)Math.sqrt((float)(level-1f)/(float)max_level)
-				+ base_min);
-		trap.setHeadWidth((head_max - head_min) *
+		current_head_width_max = ((head_max - head_min) *
 				(float)Math.sqrt((float)(level-1f)/(float)max_level)
 				+ head_min);
 		
 		// update rest of branches
 		Iterator<UIComponent> it = branches.iterator();
 		while(it.hasNext()) {
-			it.next().update(delta);
+			TreeBranch branch = (TreeBranch) it.next();
+			
+			// make sure parent head width is greater (or equal) to children 
+			// base width
+			branch.update(delta);
+			current_head_width_max = Math.max(current_head_width_max, 
+					branch.getBaseWidth());
 		}
+		
+		// change trapezoid geometry according to level
+		current_base_width_max = ((base_max - base_min) * 
+				(float)Math.sqrt((float)(level-1f)/(float)max_level)
+				+ base_min);
+		
+		// change width according to current maximum and time
+		trap.setBaseWidth(Math.min(trap.getBaseWidth() + width_inc*delta/1000f,
+				current_base_width_max));
+		trap.setHeadWidth(Math.min(trap.getHeadWidth() + width_inc*delta/1000f,
+				current_head_width_max));
+		
+		// change length according to current maximum and time
+		trap.setHeight(Math.min(trap.getHeight() + length_inc*delta/1000f,
+				current_length_max));
 	}
 	
 	/**
@@ -128,6 +155,14 @@ public class TreeBranch extends UIComponent {
 		level = cur_level;
 		return level;
 	}
+	
+	/**
+	 * Gets branch base width.
+	 * @return Branch base width.
+	 */
+	public float getBaseWidth() {
+		return trap.getBaseWidth();
+	}
 
 	@Override
 	public void render() {
@@ -135,7 +170,7 @@ public class TreeBranch extends UIComponent {
 		GL11.glPushMatrix();
 
 		// translate to the end of my branch
-		GL11.glTranslatef(position.x, position.y + trap.getHeight() + 4f, 0f);
+		GL11.glTranslatef(position.x, position.y - trap.getHeight() + 4f, 0f);
 		
 		// draw sub branches
 		for(int i=0; i<branches.size(); ++i) {
@@ -172,7 +207,7 @@ public class TreeBranch extends UIComponent {
 		GL11.glPushMatrix();
 
 		// translate to the end of my branch
-		GL11.glTranslatef(position.x, position.y + trap.getHeight(), 0f);
+		GL11.glTranslatef(position.x, position.y - trap.getHeight() + 4f, 0f);
 		
 		// draw sub branches
 		for(int i=0; i<branches.size(); ++i) {

@@ -159,9 +159,9 @@ public final class GL {
 			GL11.glVertex3f(trap.getX() - trap.getBaseWidth()/2f, trap.getY(),
 					depth);
 			GL11.glVertex3f(trap.getX() - trap.getHeadWidth()/2f, 
-					trap.getY() + trap.getHeight(), depth);
+					trap.getY() - trap.getHeight(), depth);
 			GL11.glVertex3f(trap.getX() + trap.getHeadWidth()/2f,
-					trap.getY() + trap.getHeight(), depth);
+					trap.getY() - trap.getHeight(), depth);
 			GL11.glVertex3f(trap.getX() + trap.getBaseWidth()/2f, trap.getY(),
 					depth);
 		GL11.glEnd();
