@@ -39,7 +39,7 @@ public final class Logger {
     }
     public static void printDebug(String m) {printDebug(m, 0);}
     public static void printDebug(String m, int level) {
-            if(level >= debugLevel)
+            if(level <= debugLevel)
                     print("(DD) " + m);
     }       
     

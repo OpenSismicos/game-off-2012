@@ -1,9 +1,12 @@
-package net.sismicos.verdejo.game.ui;
+package net.sismicos.verdejo.game.ui.upgrade;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.sismicos.verdejo.game.Game;
+import net.sismicos.verdejo.game.ui.UIComponent;
+import net.sismicos.verdejo.logger.Logger;
+import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
 
@@ -19,21 +22,24 @@ public class UpgradeBranch extends UIComponent {
 	private final ArrayList<Vector2f> final_points;
 	
 	// rectangle
-	private final Rectanglef rect = new Rectanglef(0f, 0f, 90f, 30f); 
+	private final Rectanglef rect = new Rectanglef(0f, 0f, 106f, 30f); 
 	
 	// animation velocity in pixels per second
 	private static final float velocity = 60f;
 	
 	// controller position and depth
 	private Vector2f position = new Vector2f(0f, 0f);
-	private static final float depth = 15f;
+	private static final float depth = 12f;
 	
 	// draw color
 	private static final Vector4f color = new Vector4f(0f, 0f, 0f, .65f); 
 	
 	// flag to select if facing left or right
 	private boolean face_right = true;
-	private static final float X_TO_FACE_LEFT = 290f;
+	private static final float X_TO_FACE_LEFT = 284f;
+	
+	// Elongate button
+	private ElongateButton elongate = new ElongateButton();
 	
 	/**
 	 * Public constructor.
@@ -61,7 +67,12 @@ public class UpgradeBranch extends UIComponent {
 	}
 
 	@Override
-	public void init() {}
+	public void init() {
+		// get a non-volatile collision color
+		setCollisionColor(ColorDispatcher.reserveColor());
+		
+		elongate.init();
+	}
 
 	@Override
 	public void update(int delta) {
@@ -90,6 +101,12 @@ public class UpgradeBranch extends UIComponent {
 					final_points.get(i).getX()));
 			points.set(i, final_point);
 		}
+		
+		// update buttons
+		elongate.update(delta);
+		
+		// update superclass
+		super.update(delta);
 	}
 
 	@Override
@@ -99,7 +116,7 @@ public class UpgradeBranch extends UIComponent {
 		
 		// translate to the initial point
 		GL.glTranslatef(new Vector3f(position.x, Game.HEIGHT - position.y,
-				depth));
+				0f));
 		
 		// draw the arrow
 		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
@@ -120,12 +137,63 @@ public class UpgradeBranch extends UIComponent {
 			Vector2f point = new Vector2f();
 			while(it.hasNext()) {
 				point = it.next();
-				GL11.glVertex2f(facing*point.x, point.y);
+				GL11.glVertex3f(facing*point.x, point.y, depth);
 			}
 		GL11.glEnd();
 		
 		// draw the rectangle
 		GL.glDrawRectangle(draw_rect, depth, color);
+		
+		// draw the elongate button
+		GL11.glPushMatrix();
+		GL.glTranslatef(new Vector3f(22f, 17f, 0f));
+		elongate.render();
+		GL11.glPopMatrix();
+		
+		// restore modelview matrix
+		GL11.glPopMatrix();
+	}
+	
+	@Override
+	public void renderCollisionRect() {
+		// save modelview matrix
+		GL11.glPushMatrix();
+		
+		// translate to the initial point
+		GL.glTranslatef(new Vector3f(position.x, Game.HEIGHT - position.y,
+				0f));
+		
+		// draw the arrow
+		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
+			// set color
+			GL.glColor3f(getCollisionColor());
+			
+			// change facing
+			float facing = 1f;
+			Rectanglef draw_rect = new Rectanglef(rect);
+			if(!face_right) {
+				facing = -1f;
+				draw_rect.setX(facing*draw_rect.getX());
+				draw_rect.setWidth(facing*draw_rect.getWidth());
+			}
+			
+			// draw points
+			Iterator<Vector2f> it = points.iterator();
+			Vector2f point = new Vector2f();
+			while(it.hasNext()) {
+				point = it.next();
+				GL11.glVertex3f(facing*point.x, point.y, depth);
+			}
+		GL11.glEnd();
+		
+		// draw the rectangle
+		GL.glDrawRectangle(draw_rect, depth, getCollisionColor());
+		
+		// draw the elongate button
+		GL11.glPushMatrix();
+		GL.glTranslatef(new Vector3f(22f, 17f, 0f));
+		elongate.renderCollisionRect();
+		GL11.glPopMatrix();
 		
 		// restore modelview matrix
 		GL11.glPopMatrix();
@@ -157,9 +225,29 @@ public class UpgradeBranch extends UIComponent {
 	public Vector2f getPosition() {
 		return new Vector2f(position);
 	}
-		
+
 	@Override
-	public void click() {}
+	public boolean click(Vector3f color) {
+		boolean any_click = super.click(color);
+		
+		// click buttons
+		any_click |= elongate.click(color);
+		
+		// if any click, keep showing the UI
+		if(any_click) {
+			show();
+		}
+		
+		// click or click any children
+		is_clicked = any_click;
+		
+		return any_click;
+	}
+	
+	@Override
+	public void click() {
+		Logger.printDebug("Click on Upgrade Branch UI.", 2);
+	}
 
 	@Override
 	public void unclick() {}

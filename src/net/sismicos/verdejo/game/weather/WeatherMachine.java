@@ -79,10 +79,10 @@ public class WeatherMachine {
 		int second = (int) Math.floor((float)current_time/1000f);
 		if(second != prev_second) {
 			prev_second = second;
-			Logger.printDebug("Current time: " + current_time, 2);
-			Logger.printDebug("Current rain rate: " + Game.getRainRate(), 2);
+			Logger.printDebug("Current time: " + current_time, 3);
+			Logger.printDebug("Current rain rate: " + Game.getRainRate(), 3);
 			Logger.printDebug("Current min: " + current_min + 
-					" Next min: " + next_min, 2);
+					" Next min: " + next_min, 3);
 		}
 		
 		// apply the change

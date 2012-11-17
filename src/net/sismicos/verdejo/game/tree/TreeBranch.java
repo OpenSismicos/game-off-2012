@@ -3,6 +3,7 @@ package net.sismicos.verdejo.game.tree;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -22,7 +23,7 @@ public class TreeBranch extends UIComponent {
 	private final float depth = 4f;
 	private Vector4f color = new Vector4f(152f/255f, 81f/255f, 
 			12f/255f, 1f);
-	private static final Vector4f original_color = new Vector4f(152f/255f, 
+	public static final Vector4f original_color = new Vector4f(152f/255f, 
 			81f/255f, 12f/255f, 1f);
 	private static final Vector4f selected_color = new Vector4f(176f/255f, 
 			122f/255f, 70f/255f, 1f);
@@ -57,12 +58,23 @@ public class TreeBranch extends UIComponent {
 	// maximum number of sub branches
 	private static int MAX_BRANCHES = 4;
 	
+	// flag to check if it is master branch
+	private final boolean master_branch;
+	
 	/**
-	 * Public constructor. Initializes the initial position to zero.
+	 * Public default constructor. Calls the constructor with master = false.
 	 */
 	public TreeBranch() {
-		this.position = new Vector2f(0f, 0f);
-		show();
+		this(false);
+	}
+	
+	/**
+	 * Public constructor. Initializes the initial position to zero and the
+	 * master flag.
+	 * @param is_master Whether this branch is master or not.
+	 */
+	public TreeBranch(boolean is_master) {
+		this(new Vector2f(0f, 0f), is_master);
 	}
 	
 	/**
@@ -70,7 +82,9 @@ public class TreeBranch extends UIComponent {
 	 * position.
 	 * @param position Initial position.
 	 */
-	public TreeBranch(Vector2f position) {
+	public TreeBranch(Vector2f position, boolean is_master) {
+		super();
+		this.master_branch = is_master;
 		this.position = new Vector2f(position);
 		show();
 	}
@@ -141,6 +155,9 @@ public class TreeBranch extends UIComponent {
 		// change length according to current maximum and time
 		trap.setHeight(Math.min(trap.getHeight() + length_inc*delta/1000f,
 				current_length_max));
+		
+		// update superclass
+		super.update(delta);
 	}
 	
 	/**
@@ -240,22 +257,36 @@ public class TreeBranch extends UIComponent {
 	}
 
 	@Override
-	public void click(Vector3f color) {
-		if(ColorDispatcher.compareColors(color, getCollisionColor())) {
-			click();
-		}
-		else {
+	public boolean click(Vector3f color) {
+		boolean any_click = false;
+		
+		// click from superclass
+		any_click = super.click(color);
+		
+		// try children just in case
+		if(!any_click) {
 			Iterator<UIComponent> it = branches.iterator();
 			while(it.hasNext()) {
-				it.next().click(color);
+				any_click |= it.next().click(color);
 			}
 		}
+		
+		// if any click, show upgrade branch
+		if(any_click) {
+			Game.showUpgradeBranch();
+		}
+		
+		// store the click state
+		is_clicked = any_click;
+		
+		return any_click;
 	}
 	
 	@Override
 	public void click() {
 		color = selected_color;
-		Game.showUpgradeBranch();
+		// change position of and show branch upgrade
+		Game.moveUpgradeBranch(new Vector2f(Mouse.getX(), Mouse.getY()));
 	}
 	
 	@Override

@@ -28,7 +28,6 @@ public class Event {
 					Mouse.getEventButtonState() == false) {
 				
 				// unclick all elements
-				Game.hideUpgradeBranch();
 				Iterator<UIComponent> it = Game.getUIComps().iterator();
 				while(it.hasNext()) {
 					UIComponent comp = it.next();
@@ -40,9 +39,6 @@ public class Event {
 				
 				// ONLY FOR DEBUG PURPOSES
 				//comp_color = GL.glPickColor(pos);
-				
-				// change position of branch upgrade UI controller
-				Game.moveUpgradeBranch(pos);
 				
 				// click the component (if there is one)
 				if(!ColorDispatcher.compareColors(comp_color, 
@@ -56,6 +52,9 @@ public class Event {
 						}
 					}
 				}
+				
+				// if no branch nor upgrade has been clicked, hide upgrade
+				Game.checkUpgradeMustBeSeen();
 			}
 		}
 		

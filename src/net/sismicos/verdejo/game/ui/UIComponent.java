@@ -16,8 +16,16 @@ public abstract class UIComponent extends Component {
 	// visibility flag
 	private boolean visible = false;
 	
+	// flag to check if the UI component has been clicked this frame
+	protected boolean is_clicked = false;
+	
+	/**
+	 * Must be called at the end of the update of its subclasses.
+	 */
 	@Override
-	public abstract void update(int delta);
+	public void update(int delta) {
+		is_clicked = false;
+	}
 	
 	/**
 	 * Called when the mouse is over the Component. Provides the mouse position 
@@ -69,10 +77,13 @@ public abstract class UIComponent extends Component {
 	/**
 	 * Checker if the propagating click is for us.
 	 */
-	public void click(Vector3f color) { 
+	public boolean click(Vector3f color) { 
 		if(ColorDispatcher.compareColors(color, collision_color)) {
+			is_clicked = true;
 			click();
+			return true;
 		}
+		return false;
 	}
 	
 	/**
@@ -84,6 +95,14 @@ public abstract class UIComponent extends Component {
 	 * Action to be performed when unclicked.
 	 */
 	public abstract void unclick();
+	
+	/**
+	 * Gets if the UI element has been clicked in this frame.
+	 * @return Whether this UI element has been clicked this frame.
+	 */
+	public boolean isClicked() {
+		return is_clicked;
+	}
 	
 	/**
 	 * Check if the component is ready for disposal.

@@ -19,8 +19,8 @@ import net.sismicos.verdejo.game.grass.Grass;
 import net.sismicos.verdejo.game.ui.TriangleUp;
 import net.sismicos.verdejo.game.ui.TriangleDown;
 import net.sismicos.verdejo.game.ui.UIComponent;
-import net.sismicos.verdejo.game.ui.UpgradeBranch;
 import net.sismicos.verdejo.game.ui.UpperBar;
+import net.sismicos.verdejo.game.ui.upgrade.UpgradeBranch;
 import net.sismicos.verdejo.game.weather.WeatherMachine;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.ColorDispatcher;
@@ -97,7 +97,8 @@ public final class Game {
     // tree representation
     private static final Vector2f TREE_INITIAL_POSITION =
     		new Vector2f(200f, 600f);
-    private static TreeBranch tree = new TreeBranch(TREE_INITIAL_POSITION);
+    private static TreeBranch tree = new TreeBranch(TREE_INITIAL_POSITION, 
+    		true);
     
     // tree upgrade UI component
     private static UpgradeBranch upgrade = new UpgradeBranch();
@@ -432,6 +433,20 @@ public final class Game {
 	}
 	public static void hideUpgradeBranch() {
 		upgrade.hide();
+	}
+	
+	/**
+	 * Checks if the upgrade UI must be seen according to whether the player has
+	 * clicked the tree or the upgrade itself.
+	 * @return Whether the upgrade UI must be seen or nor.
+	 */
+	public static boolean checkUpgradeMustBeSeen() {
+		boolean must = true;
+		if(!tree.isClicked() && !upgrade.isClicked()) {
+			must = false;
+			hideUpgradeBranch();
+		}
+		return must;
 	}
 	
 	/**
