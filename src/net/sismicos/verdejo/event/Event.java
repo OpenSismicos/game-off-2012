@@ -28,6 +28,7 @@ public class Event {
 					Mouse.getEventButtonState() == false) {
 				
 				// unclick all elements
+				Game.hideUpgradeBranch();
 				Iterator<UIComponent> it = Game.getUIComps().iterator();
 				while(it.hasNext()) {
 					UIComponent comp = it.next();
