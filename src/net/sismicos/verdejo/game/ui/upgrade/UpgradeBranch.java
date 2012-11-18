@@ -22,7 +22,7 @@ public class UpgradeBranch extends UIComponent {
 	private final ArrayList<Vector2f> final_points;
 	
 	// rectangle
-	private final Rectanglef rect = new Rectanglef(0f, 0f, 106f, 30f); 
+	private final Rectanglef rect = new Rectanglef(0f, 0f, 106f, 53f); 
 	
 	// animation velocity in pixels per second
 	private static final float velocity = 60f;
@@ -38,8 +38,9 @@ public class UpgradeBranch extends UIComponent {
 	private boolean face_right = true;
 	private static final float X_TO_FACE_LEFT = 284f;
 	
-	// Elongate button
+	// Elongate and fork buttons
 	private ElongateButton elongate = new ElongateButton();
+	private ForkButton fork = new ForkButton();
 	
 	/**
 	 * Public constructor.
@@ -71,7 +72,9 @@ public class UpgradeBranch extends UIComponent {
 		// get a non-volatile collision color
 		setCollisionColor(ColorDispatcher.reserveColor());
 		
+		// initialize buttons
 		elongate.init();
+		fork.init();
 	}
 
 	@Override
@@ -104,6 +107,7 @@ public class UpgradeBranch extends UIComponent {
 		
 		// update buttons
 		elongate.update(delta);
+		fork.update(delta);
 		
 		// update superclass
 		super.update(delta);
@@ -148,6 +152,8 @@ public class UpgradeBranch extends UIComponent {
 		GL11.glPushMatrix();
 		GL.glTranslatef(new Vector3f(22f, 17f, 0f));
 		elongate.render();
+		GL.glTranslatef(new Vector3f(0f, 23f, 0f));
+		fork.render();
 		GL11.glPopMatrix();
 		
 		// restore modelview matrix
@@ -193,6 +199,8 @@ public class UpgradeBranch extends UIComponent {
 		GL11.glPushMatrix();
 		GL.glTranslatef(new Vector3f(22f, 17f, 0f));
 		elongate.renderCollisionRect();
+		GL.glTranslatef(new Vector3f(0f, 23f, 0f));
+		fork.renderCollisionRect();
 		GL11.glPopMatrix();
 		
 		// restore modelview matrix
@@ -232,6 +240,7 @@ public class UpgradeBranch extends UIComponent {
 		
 		// click buttons
 		any_click |= elongate.click(color);
+		any_click |= fork.click(color);
 		
 		// if any click, keep showing the UI
 		if(any_click) {
