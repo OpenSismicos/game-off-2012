@@ -46,7 +46,7 @@ public class TreeBranch extends UIComponent {
 	private static final float length_max = 160f;
 	
 	// branch level, i.e., number of children branches
-	private int level = 0; 
+	private int level = 1; 
 	private int max_level = 64;
 	
 	// sub branches
@@ -220,6 +220,19 @@ public class TreeBranch extends UIComponent {
 	 */
 	public float getBaseWidth() {
 		return trap.getBaseWidth();
+	}
+	
+	
+	/**
+	 * Gets/Sets branch length.
+	 */
+	public float getLength() {
+		return current_length_max;
+	}
+	public void setLength(float length) {
+		if(length <= length_max) {
+			current_length_max = length;
+		}
 	}
 
 	@Override
