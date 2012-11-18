@@ -102,6 +102,12 @@ public final class Game {
     // tree upgrade UI component
     private static UpgradeBranch upgrade = new UpgradeBranch();
     
+    // amount of resources to fork and elongate a branch
+    public static final int water_to_elongate = 2;
+    public static final int salt_to_elongate = 1;
+    public static final int water_to_fork = 1;
+    public static final int salt_to_fork = 2;
+    
 	// private constructor
 	private Game () {}
 	
@@ -550,24 +556,36 @@ public final class Game {
 	 * @param amount
 	 * @return True if there is enough water, false otherwise.
 	 */
-	public static boolean decreaseWater(int amount) {
-		if(water < amount) {
-			return false;
+	public static void decreaseWater(int amount) {
+		if(water >= amount) {
+			water -= amount;
 		}
-		water -= amount;
-		return true;
 	}
 	/**
 	 * Decreases the amount of salt by the given amount.
 	 * @param amount
 	 * @return True if there is enough salt, false otherwise.
 	 */
-	public static boolean decreaseSalt(int amount) {
-		if(salt < amount) {
-			return false;
+	public static void decreaseSalt(int amount) {
+		if(salt >= amount) {
+			salt -= amount;
 		}
-		salt -= amount;
-		return true;
+	}
+	
+	/**
+	 * Checks if player has enough resources to elongate a branch.
+	 * @return Whether the player can elongate a branch or not.
+	 */
+	public static boolean canElongate() {
+		return (water >= water_to_elongate && salt >= salt_to_elongate);
+	}
+	
+	/**
+	 * Checks if player has enough resources to fork a branch.
+	 * @return Whether the player can fork a branch or not.
+	 */
+	public static boolean canFork() {
+		return (water >= water_to_fork && salt >= salt_to_fork);
 	}
 	
 	/**

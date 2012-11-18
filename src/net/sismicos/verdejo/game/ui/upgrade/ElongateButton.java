@@ -4,9 +4,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import net.sismicos.verdejo.game.Game;
 import net.sismicos.verdejo.game.tree.TreeBranch;
 import net.sismicos.verdejo.game.ui.UIComponent;
-import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.ColorDispatcher;
 import net.sismicos.verdejo.util.GL;
 import net.sismicos.verdejo.util.Rectanglef;
@@ -24,8 +24,12 @@ public class ElongateButton extends UIComponent {
 	
 	// branch to draw
 	private TreeBranch logo_branch = new TreeBranch();
-	private Vector3f logo_position = new Vector3f(5f, 8f, 15f);
+	private Vector3f logo_position = new Vector3f(5f, 8f, 9.5f);
 	private static final float logo_branch_length = 80f;
+	
+	// color when unable to perform action
+	private static final Vector4f deactivated_color = new Vector4f(0f, 0f, 0f, 
+			.75f);
 
 	@Override
 	public void init() {
@@ -52,6 +56,11 @@ public class ElongateButton extends UIComponent {
 		GL11.glRotatef(90f, 0f, 0f, 1f);
 		logo_branch.render();
 		GL11.glPopMatrix();
+		
+		// if its deactivated show it
+		if(!canElongate()) {
+			GL.glDrawRectangle(rect, rect_depth + 1f, deactivated_color);
+		}
 	}
 	
 	@Override
@@ -61,10 +70,19 @@ public class ElongateButton extends UIComponent {
 
 	@Override
 	public void click() {
-		Logger.printDebug("Elongate button has been clicked.");
-		if(branch != null) {
+		if(canElongate()) {
+			Game.decreaseSalt(Game.salt_to_elongate);
+			Game.decreaseWater(Game.water_to_elongate);
 			branch.elongate();
 		}
+	}
+	
+	/**
+	 * Checks if the branch can elongate.
+	 * @return Whether the branch can elongate or not.
+	 */
+	private boolean canElongate() {
+		return (branch != null && branch.canElongate() && Game.canElongate());
 	}
 	
 	/**
