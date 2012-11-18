@@ -2,6 +2,7 @@ package net.sismicos.verdejo.game.ui.upgrade;
 
 import org.lwjgl.util.vector.Vector4f;
 
+import net.sismicos.verdejo.game.tree.TreeBranch;
 import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.ColorDispatcher;
@@ -15,6 +16,9 @@ public class ElongateButton extends UIComponent {
 	private static final Vector4f rect_color = new Vector4f(19f/255f, 
 			121f/255f, 5f/255f, 1f);
 	private static final float rect_depth = 13f;
+	
+	// branch to be upgraded
+	private TreeBranch branch = null;
 
 	@Override
 	public void init() {
@@ -38,6 +42,17 @@ public class ElongateButton extends UIComponent {
 	@Override
 	public void click() {
 		Logger.printDebug("Elongate button has been clicked.");
+		if(branch != null) {
+			branch.elongate();
+		}
+	}
+	
+	/**
+	 * Sets branch to be elongated.
+	 * @param branch
+	 */
+	public void setBranch(TreeBranch branch) {
+		this.branch = branch;
 	}
 
 	@Override

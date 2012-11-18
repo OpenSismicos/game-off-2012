@@ -97,8 +97,7 @@ public final class Game {
     // tree representation
     private static final Vector2f TREE_INITIAL_POSITION =
     		new Vector2f(200f, 600f);
-    private static TreeBranch tree = new TreeBranch(TREE_INITIAL_POSITION, 
-    		true);
+    private static TreeBranch tree = new TreeBranch(TREE_INITIAL_POSITION);
     
     // tree upgrade UI component
     private static UpgradeBranch upgrade = new UpgradeBranch();
@@ -125,22 +124,22 @@ public final class Game {
 		weather.init();
 		
 		// fill up the initial tree
-		TreeBranch tree1 = new TreeBranch();
-		tree1.addBranch();
-		tree1.addBranch();
-		tree1.addBranch();
-		TreeBranch tree2 = new TreeBranch();
-		tree2.addBranch();
-		tree2.addBranch();
-		TreeBranch tree3 = new TreeBranch();
-		tree3.addBranch();
-		TreeBranch tree31 = new TreeBranch();
-		tree31.addBranch();
-		tree31.addBranch();
-		tree3.addBranch(tree31);
-		tree.addBranch(tree1);
-		tree.addBranch(tree2);
-		tree.addBranch(tree3);
+//		TreeBranch tree1 = new TreeBranch();
+//		tree1.addBranch();
+//		tree1.addBranch();
+//		tree1.addBranch();
+//		TreeBranch tree2 = new TreeBranch();
+//		tree2.addBranch();
+//		tree2.addBranch();
+//		TreeBranch tree3 = new TreeBranch();
+//		tree3.addBranch();
+//		TreeBranch tree31 = new TreeBranch();
+//		tree31.addBranch();
+//		tree31.addBranch();
+//		tree3.addBranch(tree31);
+//		tree.addBranch(tree1);
+//		tree.addBranch(tree2);
+//		tree.addBranch(tree3);
 		
 		// initialize the component lists
 		components = new ArrayList<Component>();
@@ -447,6 +446,14 @@ public final class Game {
 			hideUpgradeBranch();
 		}
 		return must;
+	}
+	
+	/**
+	 * Sets the branch to be upgraded.
+	 * @param branch Branch to be upgraded.
+	 */
+	public static void setBranchToUpgrade(TreeBranch branch) {
+		upgrade.setBranch(branch);
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.sismicos.verdejo.game.Game;
+import net.sismicos.verdejo.game.tree.TreeBranch;
 import net.sismicos.verdejo.game.ui.UIComponent;
 import net.sismicos.verdejo.logger.Logger;
 import net.sismicos.verdejo.util.ColorDispatcher;
@@ -38,9 +39,12 @@ public class UpgradeBranch extends UIComponent {
 	private boolean face_right = true;
 	private static final float X_TO_FACE_LEFT = 284f;
 	
-	// Elongate and fork buttons
+	// elongate and fork buttons
 	private ElongateButton elongate = new ElongateButton();
 	private ForkButton fork = new ForkButton();
+	
+	// branch to upgrade
+	private TreeBranch branch = null;
 	
 	/**
 	 * Public constructor.
@@ -233,6 +237,21 @@ public class UpgradeBranch extends UIComponent {
 	public Vector2f getPosition() {
 		return new Vector2f(position);
 	}
+	
+	/**
+	 * Gets/Sets the branch to be upgraded.
+	 * @param branch Branch to be upgraded.
+	 */
+	public void setBranch(TreeBranch branch) {
+		this.branch = branch;
+		
+		// make branch button accessible
+		elongate.setBranch(branch);
+		fork.setBranch(branch);
+	}
+	public TreeBranch getBranch() {
+		return branch;
+	}
 
 	@Override
 	public boolean click(Vector3f color) {
@@ -242,8 +261,11 @@ public class UpgradeBranch extends UIComponent {
 		any_click |= elongate.click(color);
 		any_click |= fork.click(color);
 		
-		// if any click, keep showing the UI
+		// if any click, keep showing the UI and highlight branch
 		if(any_click) {
+			if(branch != null) {
+				branch.highlight();
+			}
 			show();
 		}
 		

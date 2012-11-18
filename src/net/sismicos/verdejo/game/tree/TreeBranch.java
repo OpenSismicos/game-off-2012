@@ -40,8 +40,9 @@ public class TreeBranch extends UIComponent {
 	private static final float width_inc = 2f;
 	
 	// branch length changes
-	private float current_length_max = 100f;
+	private float current_length_max = 20f;
 	private static final float length_inc = 2f;
+	private static final float length_inc_next_level = 20f;
 	private static final float length_max = 160f;
 	
 	// branch level, i.e., number of children branches
@@ -58,23 +59,13 @@ public class TreeBranch extends UIComponent {
 	// maximum number of sub branches
 	private static int MAX_BRANCHES = 4;
 	
-	// flag to check if it is master branch
-	private final boolean master_branch;
-	
 	/**
-	 * Public default constructor. Calls the constructor with master = false.
+	 * Public default constructor.Initializes the initial position to zero.
 	 */
 	public TreeBranch() {
-		this(false);
-	}
-	
-	/**
-	 * Public constructor. Initializes the initial position to zero and the
-	 * master flag.
-	 * @param is_master Whether this branch is master or not.
-	 */
-	public TreeBranch(boolean is_master) {
-		this(new Vector2f(0f, 0f), is_master);
+		super();
+		this.position = new Vector2f(0f, 0f);
+		show();
 	}
 	
 	/**
@@ -82,9 +73,8 @@ public class TreeBranch extends UIComponent {
 	 * position.
 	 * @param position Initial position.
 	 */
-	public TreeBranch(Vector2f position, boolean is_master) {
+	public TreeBranch(Vector2f position) {
 		super();
-		this.master_branch = is_master;
 		this.position = new Vector2f(position);
 		show();
 	}
@@ -98,6 +88,7 @@ public class TreeBranch extends UIComponent {
 		if(branches.size() < MAX_BRANCHES) {
 			branch.init();
 			branches.add(branch);
+			angles = calculateSubBranchAngles(branches.size());
 			return true;
 		}
 		else {
@@ -112,6 +103,55 @@ public class TreeBranch extends UIComponent {
 	public boolean addBranch() {
 		TreeBranch branch  = new TreeBranch();
 		return addBranch(branch);
+	}
+	
+	/**
+	 * Checks if the branch can further elongate.
+	 * @return Whether the branch can further elongate or not.
+	 */
+	public boolean canElongate() {
+		if(current_length_max >= length_max) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Elongates current branch.
+	 * TODO: Introduce randomness for happiness.
+	 */
+	public void elongate() {
+		if(canElongate()) {
+			current_length_max += length_inc_next_level;
+		}
+	}
+	
+	/**
+	 * Checks if the branch can further fork.
+	 * @return Whether the branch can further fork or not.
+	 */
+	public boolean canFork() {
+		if(branches.size() < MAX_BRANCHES) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Elongates current branch.
+	 * TODO: Introduce randomness for happiness.
+	 */
+	public void fork() {
+		if(canFork()) {
+			addBranch();
+		}
+	}
+	
+	/**
+	 * Highlights the branch (when is selected).
+	 */
+	public void highlight() {
+		color = selected_color;
 	}
 	
 	@Override
@@ -284,7 +324,11 @@ public class TreeBranch extends UIComponent {
 	
 	@Override
 	public void click() {
-		color = selected_color;
+		highlight();
+		
+		// link branch with upgrade branch
+		Game.setBranchToUpgrade(this);
+		
 		// change position of and show branch upgrade
 		Game.moveUpgradeBranch(new Vector2f(Mouse.getX(), Mouse.getY()));
 	}
@@ -346,11 +390,11 @@ public class TreeBranch extends UIComponent {
 			angles[2] =  20f;
 			break;
 		case 4:
-			angles = new float[2];
+			angles = new float[4];
 			angles[0] = -30f;
 			angles[1] = -10f;
-			angles[0] =  10f;
-			angles[1] =  30f;
+			angles[2] =  10f;
+			angles[3] =  30f;
 			break;
 		default:
 			Logger.printErr("Trying to sub branch more than 4 branches.");
