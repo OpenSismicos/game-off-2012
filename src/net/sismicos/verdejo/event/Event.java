@@ -56,6 +56,17 @@ public class Event {
 				// if no branch nor upgrade has been clicked, hide upgrade
 				Game.checkUpgradeMustBeSeen();
 			}
+			
+			// Mouse button 1 up event
+			if(Mouse.getEventButton() == 1 &&
+					Mouse.getEventButtonState() == false) {
+				if(Game.isDown()) {
+					Game.moveUp();
+				}
+				else {
+					Game.moveDown();
+				}
+			}
 		}
 		
 		// check key events

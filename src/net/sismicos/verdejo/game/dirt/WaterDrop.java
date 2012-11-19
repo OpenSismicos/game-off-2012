@@ -12,7 +12,7 @@ import net.sismicos.verdejo.util.Rectanglef;
 
 public class WaterDrop extends UIComponent {
 	// geometry of the drop valid positions
-	private static final float STARTING_HEIGHT = 600f;
+	private static final float STARTING_HEIGHT = 675f;
 	private static final float STARTING_HEIGHT_VAR = 0f;
 	private static final float BOTTOM_POSITION = 1250f;
 	
