@@ -401,7 +401,7 @@ public final class Game {
 		UIComponent comp = null;
 		for(int i=0; i<ui.size(); ++i) {
 			comp = ui.get(i);
-			if(!comp.isPositionAbsolute()) {
+			if(!comp.isPositionAbsolute() && comp.isVisible()) {
 				comp.renderCollisionRect();
 			}
 		}
@@ -412,7 +412,7 @@ public final class Game {
 		// position-absolute components
 		for(int i=0; i<ui.size(); ++i) {
 			comp = ui.get(i);
-			if(comp.isPositionAbsolute()) {
+			if(comp.isPositionAbsolute() && comp.isVisible()) {
 				comp.renderCollisionRect();
 			}
 		}
